@@ -6,11 +6,11 @@
         <div class="left-filter-price-container">
             <p>Price</p>
             <div class="price-filter">
-                <input type="text">
-                <p>$</p>
+                <input type="number" value="0">
+                <!-- <p>$</p> -->
                 <p>&nbsp;-&nbsp;</p>
-                <input type="text">
-                <span>$</span>
+                <input type="numer" value="6900">
+                <!-- <span>$</span> -->
             </div>
         </div>
 
@@ -19,7 +19,7 @@
         <div class="left-filter-moq-container">
             <p>MOQ</p>
             <div class="moq-filter">
-                <input type="text" placeholder="Less than">
+                <input type="number" placeholder="Less than">
             </div>
         </div>
 
@@ -46,7 +46,7 @@
             <p>Supplier Certification</p>
             <div class="left-filter-cert-container-inner">
                 <div class="cert-filter">
-                <input type="text" placeholder="Product Certifications...">
+                <input type="text" placeholder="Supplier Certifications...">
             </div>
             <div class="left-filter-supply-checkbox">
                 <div class="left-filter-big-checkbox" v-for="item in supCert">
@@ -63,7 +63,7 @@
             <p>Manufacturer Location</p>
             <div class="left-filter-cert-container-inner">
                 <div class="cert-filter">
-                <input type="text" placeholder="Product Certifications...">
+                <input type="text" placeholder="Country/Region">
             </div>
             <div class="left-filter-cert-checkbox">
                 <div class="left-filter-big-checkbox" v-for="item in location">
@@ -74,10 +74,13 @@
             </div>
         </div>
 
-        <div>
+        <div class="left-filter-stock">
             <p>Stock Availability</p>
-            <input type="checkbox">
-            <span>in USA</span>
+            <div class="left-filter-stock-flex">
+                <input type="checkbox">
+                <img src="../assets/usa.png" width="25px">
+                <span style="font-size: 14px;">&nbsp;in USA</span>
+            </div>
         </div>
         
     </div>
@@ -100,10 +103,29 @@ export default{
 </script>
 
 <style>
+.left-filter-stock-flex{
+    display: flex;
+    align-items: center;
+}
+.left-filter-stock img{
+    margin-left: 10px;
+}
+.left-filter-parent p{
+    font-size: 18px;
+}
+.moq-filter input::-webkit-inner-spin-button{
+    display: none;
+}
+.price-filter input::-webkit-inner-spin-button{
+    display: none;
+}
 .left-filter-parent{
     border: 1px solid #c8c5c5;
     padding: 20px 10px;
     border-radius: 5px;
+}
+.left-filter-parent input{
+    text-align: center;
 }
 .price-filter{
     display: flex;
@@ -165,6 +187,13 @@ margin-top: 20px;
     width: 90%;
     height: 170px;
 }
+.left-filter-cert-checkbox::-webkit-scrollbar{
+    background-color: #DEDEDE;
+    width: 5px;
+}
+.left-filter-cert-checkbox::-webkit-scrollbar-thumb{
+    background-color: #5CB674;
+}
 .left-filter-cert-checkbox input{
     margin: 8px 0;
 }
@@ -173,6 +202,14 @@ margin-top: 20px;
     width:20px;
     height:20px;
 }
+.left-filter-stock{
+    margin-top: 30px;
+}
+.left-filter-stock input[type='checkbox'] {
+    width:20px;
+    height:20px;
+    margin-left: 10px;
+}
 .left-filter-big-checkbox{
     display: flex;
     align-items: center;
@@ -180,7 +217,7 @@ margin-top: 20px;
 .left-filter-supply-checkbox{
     margin-top: 20px;
     height: 100px; 
-    width: 90%;
+    width: 94%;
     height: 170px;
 }
 </style>

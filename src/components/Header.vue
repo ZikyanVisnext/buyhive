@@ -9,9 +9,12 @@
     <div class="header-right">
         <div class="header-right-first-two-buttons">
             <button class="header-right-button">Register</button>
-            <button class="header-right-button">Sign in</button>
+            <button class="header-right-button-signin">Sign in</button>
         </div>
-        <button>cart</button>
+        <!-- <button>cart</button> -->
+        <i class="fa fa-shopping-basket header-cart-icon"> </i>
+        <span class="cart-icon-circle">0</span>
+        <!-- <i class="icon-cart text-green text-2.5xl"></i> -->
     </div>
     </div>
 </template>
@@ -29,6 +32,20 @@ export default{
 </script>
 
 <style>
+.cart-icon-circle{
+    font-size: 18px;
+    color: #fff;
+    background-color: #000;
+    padding: 0px 5px;
+    border-radius: 50px;
+    margin-left: -25px;
+    margin-top: 25px;
+}
+.header-cart-icon{
+    font-size: 24px;
+    color: #66BA86;
+    cursor: pointer;
+}
 .header-parent{
     /* background-color: crimson; */
     display: flex;
@@ -52,17 +69,28 @@ export default{
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 300px;
+    width: 270px;
     /* background-color: crimson; */
 }
 .header-right-button{
     width: 100px;
     height: 40px;
     border-radius: 50px;
-    color: rgb(95, 170, 170);
+    color: #57C2D8;
     font-size: 16px;
-    background-color: rgba(240, 248, 255, 0);
-    border: 1px solid rgb(95, 170, 170);
+    background-color: #fff;
+    border: 1px solid #57C2D8;
+    cursor: pointer;
+}
+.header-right-button-signin{
+    width: 100px;
+    height: 40px;
+    border-radius: 50px;
+    color: #66BA86;
+    font-size: 16px;
+    background-color: #fff;
+    border: 1px solid #66BA86;
+    cursor: pointer;
 }
 .header-right-first-two-buttons{
     /* background-color: crimson; */

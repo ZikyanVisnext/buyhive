@@ -7,8 +7,8 @@
             <p>Buy</p>
         </div>
         <div class="below-search-right">
-            <p>Placing bulk orders on BuyHive is safe & easy.</p>
-            <p class="below-search-learn-text">Click to learn how it works!</p>
+            Placing bulk orders on BuyHive is safe & easy.<br>
+            <strong>Click to learn how it works!</strong>
         </div>
         
     </div>
@@ -34,25 +34,23 @@ export default{
 }
 .below-search-left p{
     font-size: 20px;
-    font-weight: bold;
+    font-weight: 500;
 }
 .below-search-number-of-products{
-    color: #C1C0C0;
+    color: #918E8F;
     font-weight: 500;
 }
 .below-search-middle{
-    margin-right: 500px;
+    margin-right: 470px;
+    color: #918E8F;
 }
 .below-search-right{
-    background-color: #39A0C3;
+    background-image: url('../assets/textBackground.png');
     color: #fff;
     border-radius: 10px;
     text-align: center;
     font-size: 18px;
     width: 450px;
-    
-}
-.below-search-learn-text{
-    font-weight: bold;
+    padding: 10px;
 }
 </style>

@@ -2,6 +2,7 @@
     <div class="search-parent">
         <div class="search-container">
             <div class="search-left">
+                <i class="fa fa-window-restore	search-category-icon"></i>
                 <p style="font-size: 18px;">Categories</p>
             </div>
             <div class="search-middle">
@@ -31,6 +32,17 @@ export default{
 </script>
 
 <style>
+.search-category-icon{
+    font-size: 24px;
+    margin-right: 20px;
+    color: #57C2D8;
+}
+.search-left{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
 .search-parent{
     display: flex;
     justify-content: center;
@@ -47,7 +59,7 @@ export default{
 }
 .search-middle-input{
     height: 15px;
-    width: 900px;
+    width: 950px;
     padding: 15px;
     border-radius: 50px;
     font-size: 18px;
@@ -61,6 +73,7 @@ export default{
     border-radius: 50px;
     color: #fff;
     font-size: 16px;
+    cursor: pointer;
 }
 .search-select-all-categories{
     margin-left: -200px;
