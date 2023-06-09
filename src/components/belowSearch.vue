@@ -1,7 +1,7 @@
 <template>
     <div class="below-search-parent">
         <div class="below-search-left">
-            <p>Products &nbsp; &nbsp; <span class="below-search-number-of-products">(524 Products)</span></p>
+            <p>Products &nbsp; &nbsp; <span class="below-search-number-of-products">({{getProducts.total_results}} Products)</span></p>
         </div>
         <div class="below-search-middle">
             <p>Buy</p>
@@ -20,6 +20,14 @@ export default{
         return{
 
         }
+    },
+    computed:{
+        getProducts(){
+           return this.$store.getters.getProducts
+        }   
+    },
+    created(){
+        this.$store.dispatch('fetchProducts')
     }
 }
 

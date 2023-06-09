@@ -32,8 +32,8 @@
                 <input type="text" placeholder="Product Certifications...">
             </div>
             <div class="left-filter-cert-checkbox">
-                <div class="left-filter-big-checkbox" v-for="item in proCert">
-                    <input type="checkbox" >
+                <div class="left-filter-big-checkbox" v-for="item in getFilters.product_certification">
+                    <input type="checkbox" :value=item @change="zikTest(item)">
                     <span>&nbsp; &nbsp; {{item}}</span>
                 </div>
             </div>
@@ -49,7 +49,7 @@
                 <input type="text" placeholder="Supplier Certifications...">
             </div>
             <div class="left-filter-supply-checkbox">
-                <div class="left-filter-big-checkbox" v-for="item in supCert">
+                <div class="left-filter-big-checkbox" v-for="item in getFilters.supplier_certification">
                     <input type="checkbox" >
                     <span>&nbsp; &nbsp; {{item}}</span>
                 </div>
@@ -66,7 +66,7 @@
                 <input type="text" placeholder="Country/Region">
             </div>
             <div class="left-filter-cert-checkbox">
-                <div class="left-filter-big-checkbox" v-for="item in location">
+                <div class="left-filter-big-checkbox" v-for="item in getFilters.supplier_locations">
                     <input type="checkbox" >
                     <span>&nbsp; &nbsp; {{item}}</span>
                 </div>
@@ -82,6 +82,8 @@
                 <span style="font-size: 14px;">&nbsp;in USA</span>
             </div>
         </div>
+
+        
         
     </div>
 </template>
@@ -90,13 +92,23 @@
 export default{
     data(){
         return{
-            proCert:['ASTM', 'CE', 'Certificate of Compliance',
-            'Certificate of Conformity', 'EN', 'EPA', 'FCC', 'FDA', 'GB',
-            'Green Clean Certificate', 'Intertek', 'ISO 11439:2000',
-            'ISO 11439:2013', 'ROHS', 'SGS'],
-            supCert:['DUNS', 'DRS', 'GMP', 'ISO 13485', 'ISO 9001', 'ISO 9001:2015'],
-            location:['Australia', 'Canada', 'China', 'Hong Kong S.A.R', 'India',
-            'Korea, Republic', 'United Kingdom', 'United States', 'Vietnam']
+            
+        }
+    },
+    computed:{
+        getFilters(){
+            return this.$store.getters.getFilters
+        },
+    },
+    created(){
+        this.$store.dispatch('fetchFilters')
+    },
+    methods:{
+        zikTest(item){
+            // this.$store.state.getFilters.forEach(element => {
+            //     console.log(element)
+            // });
+            console.log(item)
         }
     }
 }

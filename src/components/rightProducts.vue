@@ -15,15 +15,42 @@
                 <!-- Relevance filter + next page pf products arrow buttons -->
 
                 <div>
-                    <select class="right-upper-right-product-input-relevance">
-                        <option>Relevance</option>
-                        <option>Latest</option>
-                        <option>Price Low to High</option>
-                        <option>Price High to Low</option>
-                        <option>MOQ Low to High</option>
-                        <option>Ratings High to Low</option>
+                    <select @change="relevanceFilter($event)" class="right-upper-right-product-input-relevance">
+                        <option value="relevance">Relevance</option>
+                        <option value="latest">Latest</option>
+                        <option value="lowtohigh">Price Low to High</option>
+                        <option value="hightolow">Price High to Low</option>
+                        <option value="moqLowToHigh">MOQ Low to High</option>
+                        <option value="ratingsHighToLow">Ratings High to Low</option>
                     </select>
                 </div>
+                <i class="fa fa-toggle-left right-product-left-button"></i>
+                <input class="right-upper-right-product-input" type="text" value="1" readonly>
+                <p>of 22</p>
+                <i class="fa fa-toggle-right right-product-left-button" v-on:click="nextPage"></i>
+            </div>
+        </div>
+
+        <!-- Products display section -->
+
+        <div class="right-parent-lower">
+            <div class="right-product-display" v-for="item in getProducts.products">
+                <div  class="single-product-container">
+                    <img class="product-image" v-bind:src=item.images[0].url alt="">
+                    <div class="product-info-text">
+                        <!-- <p>Rolhei 75% Ethanol Wet Wipe - 100 co...</p> -->
+                        <P>{{ item.product_name }}</P>
+                        <p class="product-moq-price-text">MOQ: {{item.display_moq}}</p>
+                        <p class="product-price-text">{{item.price}}</p>
+                    </div>
+                </div>
+            </div>
+
+        <!-- Next page pf products arrow buttons -->
+                  
+        </div>
+        <div class="product-lower-next-button-container">
+            <div class="product-lower-next-button">
                 <i class="fa fa-toggle-left right-product-left-button"></i>
                 <input class="right-upper-right-product-input" type="text" value="1" readonly>
                 <p>of 22</p>
@@ -31,91 +58,79 @@
             </div>
         </div>
 
-        <!-- Products display section -->
-
-        <div class="right-parent-lower">
-            <div class="right-product-display">
-                <div  class="single-product-container">
-                    <img class="product-image" src="../assets/product1.png" alt="">
-                    <div class="product-info-text">
-                        <p>Rolhei 75% Ethanol Wet Wipe - 100 co...</p>
-                        <p class="product-moq-price-text">MOQ: 1,512 Pieces</p>
-                        <p class="product-price-text">$ 1.40 / Piece</p>
-                    </div>
-                </div>
-
-                <div  class="single-product-container">
-                    <img class="product-image" src="../assets/product2.jpg" alt="">
-                    <div class="product-info-text">
-                        <p>Rolhei 75% Ethanol Wet Wipe - 100 co...</p>
-                        <p class="product-moq-price-text">MOQ: 1,512 Pieces</p>
-                        <p class="product-price-text">$ 1.40 / Piece</p>
-                    </div>
-                </div>
-
-                <div  class="single-product-container">
-                    <img class="product-image" src="../assets/product3.png" alt="">
-                    <div class="product-info-text">
-                        <p>Rolhei 75% Ethanol Wet Wipe - 100 co...</p>
-                        <p class="product-moq-price-text">MOQ: 1,512 Pieces</p>
-                        <p class="product-price-text">$ 1.40 / Piece</p>
-                    </div>
-                </div>
-
-                <div  class="single-product-container">
-                    <img class="product-image" src="../assets/product4.jpg" alt="">
-                    <div class="product-info-text">
-                        <p>Rolhei 75% Ethanol Wet Wipe - 100 co...</p>
-                        <p class="product-moq-price-text">MOQ: 1,512 Pieces</p>
-                        <p class="product-price-text">$ 1.40 / Piece</p>
-                    </div>
-                </div>
-
-                <div  class="single-product-container">
-                    <img class="product-image" src="../assets/product4.jpg" alt="">
-                    <div class="product-info-text">
-                        <p>Rolhei 75% Ethanol Wet Wipe - 100 co...</p>
-                        <p class="product-moq-price-text">MOQ: 1,512 Pieces</p>
-                        <p class="product-price-text">$ 1.40 / Piece</p>
-                    </div>
-                </div>
-
-                <div  class="single-product-container">
-                    <img class="product-image" src="../assets/product4.jpg" alt="">
-                    <div class="product-info-text">
-                        <p>Rolhei 75% Ethanol Wet Wipe - 100 co...</p>
-                        <p class="product-moq-price-text">MOQ: 1,512 Pieces</p>
-                        <p class="product-price-text">$ 1.40 / Piece</p>
-                    </div>
-                </div>
-            </div>
-
-          
-
-        <!-- Next page pf products arrow buttons -->
-            <div class="product-lower-next-button-container">
-                <div class="product-lower-next-button">
-                    <i class="fa fa-toggle-left right-product-left-button"></i>
-                    <input class="right-upper-right-product-input" type="text" value="1" readonly>
-                    <p>of 22</p>
-                    <i class="fa fa-toggle-right right-product-left-button"></i>
-                </div>
-            </div>        
-        </div>
+        <!-- <button v-on:click="zikTest">Here</button> -->
+        <!-- <div>
+            <p>here</p>
+            <ul>
+                <li v-for="item in getProducts">{{ item }}</li>
+            </ul>
+        </div> -->
     </div>
 </template>
 
 <script>
+
 export default{
     data(){
         return{
-            
+            page:1
+        }
+    },
+    computed:{
+        getProducts(){
+            return this.$store.getters.getProducts
+        },
+        // products(){
+        //     return this.$store.state.products
+        // },
+        },
+    created(){
+        this.$store.dispatch('fetchProducts');
+    },
+    methods:{
+        relevanceFilter(event){
+            if(event.target.value=='relevance'){
+                this.$store.dispatch('relevance');
+                return this.$store.getters.relevance
+            }
+            else if(event.target.value=='latest'){
+                this.$store.dispatch('latest');
+                return this.$store.getters.latest
+            }
+            else if(event.target.value=='lowtohigh'){
+                this.$store.dispatch('lowToHigh');
+                return this.$store.getters.lowToHigh
+            }
+            else if(event.target.value=='hightolow'){
+                this.$store.dispatch('highToLow');
+                return this.$store.getters.highToLow
+            }
+            else if(event.target.value=='moqLowToHigh'){
+                this.$store.dispatch('MOQlowToHigh');
+                return this.$store.getters.MOQlowToHigh
+            }
+            else if(event.target.value=='ratingsHighToLow'){
+                this.$store.dispatch('ratingsHighToLow');
+                return this.$store.getters.ratingsHighToLow
+            }
+        },
+        zikTest(){
+            console.log(this.$store.state.products.total_results)
+        },
+        nextPage(){
+            this.$store.dispatch('nextPage', ++this.page);
+            return this.$store.getters.nextPage
         }
     }
 }
 </script>
 
 <style>
+.right-parent-lower{
+    /* background-color: crimson; */
+    display: flex;
+    flex-wrap: wrap;
+}
 .right-product-left-button{
     font-size: 24px;
     background-color: #F2F2F2;
@@ -175,8 +190,8 @@ export default{
     border: 1px solid #c8c5c5;
 }
 .right-product-display{
-    display: flex;
-    flex-wrap: wrap;
+    /* display: flex;
+    flex-wrap: wrap; */
     /* background-color: crimson; */
     justify-content: space-between;
     /* align-items: center; */
@@ -202,6 +217,7 @@ export default{
     flex-direction: column;
     justify-content: center;
     align-items: center; */
+    width: 355px;
     margin-bottom: 50px;
     border-radius: 8px;
     height: 400px;
