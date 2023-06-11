@@ -1,6 +1,22 @@
 <template>
     <div class="left-filter-parent">
 
+        <div class="left-filter-container">
+
+            <div v-if="getFilters.categories?.length>=1" class="left-filter-cert-container">
+            <div class="left-filter-cert-container-inner">
+                <div class="cert-filter">
+                <input type="text" placeholder="More Categories">
+            </div>
+            <div class="left-filter-cert-checkbox">
+                <div class="left-filter-big-checkbox" v-for="(item, index) in getFilters.categories" :key="index">
+                    <!-- <input type="checkbox" :value=item  @change="updateCheckedValues($event, item.value)"> -->
+                    <p>{{item.category_name}}</p>
+                </div>
+            </div>
+            </div>
+        </div>
+
         <!-- Price Section -->
 
         <div class="left-filter-price-container">
@@ -25,15 +41,15 @@
 
         <!-- Product Certification Section -->
 
-        <div class="left-filter-cert-container">
+        <div v-if="getFilters.product_certification?.length" class="left-filter-cert-container">
             <p>Product Certification</p>
             <div class="left-filter-cert-container-inner">
                 <div class="cert-filter">
                 <input type="text" placeholder="Product Certifications...">
             </div>
             <div class="left-filter-cert-checkbox">
-                <div class="left-filter-big-checkbox" v-for="item in getFilters.product_certification">
-                    <input type="checkbox" :value=item @change="zikTest(item)">
+                <div class="left-filter-big-checkbox" v-for="(item, index) in getFilters.product_certification" :key="index">
+                    <input type="checkbox" :value=item  @change="updateCheckedValues($event, item.value)">
                     <span>&nbsp; &nbsp; {{item}}</span>
                 </div>
             </div>
@@ -42,14 +58,14 @@
 
         <!-- Supplier Certification -->
 
-        <div class="left-filter-cert-container">
+        <div v-if="getFilters.supplier_certification?.length" class="left-filter-cert-container">
             <p>Supplier Certification</p>
             <div class="left-filter-cert-container-inner">
                 <div class="cert-filter">
                 <input type="text" placeholder="Supplier Certifications...">
             </div>
             <div class="left-filter-supply-checkbox">
-                <div class="left-filter-big-checkbox" v-for="item in getFilters.supplier_certification">
+                <div class="left-filter-big-checkbox" v-for="(item, index) in getFilters.supplier_certification" :key="index">
                     <input type="checkbox" >
                     <span>&nbsp; &nbsp; {{item}}</span>
                 </div>
@@ -59,14 +75,14 @@
 
         <!-- Manufacturer Location -->
 
-        <div class="left-filter-cert-container">
+        <div v-if="getFilters.supplier_locations?.length" class="left-filter-cert-container">
             <p>Manufacturer Location</p>
             <div class="left-filter-cert-container-inner">
                 <div class="cert-filter">
                 <input type="text" placeholder="Country/Region">
             </div>
             <div class="left-filter-cert-checkbox">
-                <div class="left-filter-big-checkbox" v-for="item in getFilters.supplier_locations">
+                <div class="left-filter-big-checkbox" v-for="(item, index) in getFilters.supplier_locations" :key="index">
                     <input type="checkbox" >
                     <span>&nbsp; &nbsp; {{item}}</span>
                 </div>
@@ -74,7 +90,7 @@
             </div>
         </div>
 
-        <div class="left-filter-stock">
+        <div v-if="getFilters.stock_in_usa_filter" class="left-filter-stock">
             <p>Stock Availability</p>
             <div class="left-filter-stock-flex">
                 <input type="checkbox">
@@ -83,8 +99,7 @@
             </div>
         </div>
 
-        
-        
+    </div>
     </div>
 </template>
 
@@ -92,7 +107,11 @@
 export default{
     data(){
         return{
-            
+            proCert:[],
+            // proCertOptions:[],
+            payload:{
+                proCertOptions:[]
+            }
         }
     },
     computed:{
@@ -109,7 +128,26 @@ export default{
             //     console.log(element)
             // });
             console.log(item)
-        }
+        },
+        getProCert(){
+            this.payload.proCertOptions.join(',')
+            this.$store.dispatch('grandFilter', this.payload)
+            return this.$store.getters.grandFilter
+        },
+        proCerFilter(productCertificate){
+            this.$store.dispatch('sortByFilter',productCertificate)
+            this.$store.dispatch('grandFilter')
+            return this.$store.getters.grandFilter
+        },
+        updateCheckedValues(event, value) {
+      const isChecked = event.target.checked;
+      if (isChecked) {
+        this.$store.commit('updateCheckedValues', [...this.$store.state.filterOptions.checkedValues, value]);
+      } else {
+        const updatedValues = this.$store.state.filterOptions.checkedValues.filter((v) => v !== value);
+        this.$store.commit('updateCheckedValues', updatedValues);
+      }
+    },
     }
 }
 </script>
@@ -131,7 +169,7 @@ export default{
 .price-filter input::-webkit-inner-spin-button{
     display: none;
 }
-.left-filter-parent{
+.left-filter-container{
     border: 1px solid #c8c5c5;
     padding: 20px 10px;
     border-radius: 5px;

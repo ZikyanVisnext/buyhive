@@ -1,11 +1,20 @@
 <template>
     <div class="below-search-parent">
         <div class="below-search-left">
-            <p>Products &nbsp; &nbsp; <span class="below-search-number-of-products">({{getProducts.total_results}} Products)</span></p>
+            <div v-for="(item, index) in getFilters.category_breadcrumbs" :key=index>
+                <p>{{ item.category_name }}  &nbsp; &nbsp;</p>
+            </div>
+            <div class="below-search-number-of-products">
+                ({{getProducts.total_results}} Products)
+            </div>
         </div>
-        <div class="below-search-middle">
-            <p>Buy</p>
+        <div style="display: flex;" class="below-search-middle">
+            Buy
+            <div v-for="(item, index) in getFilters.category_breadcrumbs" :key=index >
+            <p>/{{ item.category_name }}</p>
         </div>
+        </div>
+        
         <div class="below-search-right">
             Placing bulk orders on BuyHive is safe & easy.<br>
             <strong>Click to learn how it works!</strong>
@@ -24,10 +33,15 @@ export default{
     computed:{
         getProducts(){
            return this.$store.getters.getProducts
-        }   
+        },
+        getFilters(){
+            return this.$store.getters.getFilters
+        },
     },
     created(){
         this.$store.dispatch('fetchProducts')
+        this.$store.dispatch('fetchFilters')
+        // console.log(this.getProducts)
     }
 }
 
@@ -40,7 +54,8 @@ export default{
     justify-content: space-between;
     align-items: center;
 }
-.below-search-left p{
+.below-search-left{
+    display: flex;
     font-size: 20px;
     font-weight: 500;
 }
@@ -58,6 +73,9 @@ export default{
     border-radius: 10px;
     text-align: center;
     font-size: 18px;
+    background-size: cover;
+    /* width: 25vw;
+    padding: 10px; */
     width: 450px;
     padding: 10px;
 }

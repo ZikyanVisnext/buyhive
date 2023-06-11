@@ -15,26 +15,26 @@
                 <!-- Relevance filter + next page pf products arrow buttons -->
 
                 <div>
-                    <select @change="relevanceFilter($event)" class="right-upper-right-product-input-relevance">
+                    <select @change="sortByFilter($event)" class="right-upper-right-product-input-relevance">
                         <option value="relevance">Relevance</option>
                         <option value="latest">Latest</option>
-                        <option value="lowtohigh">Price Low to High</option>
-                        <option value="hightolow">Price High to Low</option>
-                        <option value="moqLowToHigh">MOQ Low to High</option>
-                        <option value="ratingsHighToLow">Ratings High to Low</option>
+                        <option value="price_low_to_high">Price Low to High</option>
+                        <option value="price_high_to_low">Price High to Low</option>
+                        <option value="MOQ_low_to_high">MOQ Low to High</option>
+                        <option value="ratings_high_to_low">Ratings High to Low</option>
                     </select>
                 </div>
-                <i class="fa fa-toggle-left right-product-left-button"></i>
-                <input class="right-upper-right-product-input" type="text" value="1" readonly>
-                <p>of 22</p>
-                <i class="fa fa-toggle-right right-product-left-button" v-on:click="nextPage"></i>
+                <i class="fa fa-toggle-left right-product-left-button" v-on:click="decrementPage"></i>
+                <input class="right-upper-right-product-input" type="text" :value=this.$store.state.filterOptions.page readonly>
+                <p>of &nbsp; {{Math.ceil(getProducts.total_results/24)}}</p>
+                <i class="fa fa-toggle-right right-product-left-button" v-on:click="incrementPage"></i>
             </div>
         </div>
 
         <!-- Products display section -->
 
         <div class="right-parent-lower">
-            <div class="right-product-display" v-for="item in getProducts.products">
+            <div class="right-product-display" v-for="(item, index) in getProducts.products" :key="index">
                 <div  class="single-product-container">
                     <img class="product-image" v-bind:src=item.images[0].url alt="">
                     <div class="product-info-text">
@@ -51,10 +51,10 @@
         </div>
         <div class="product-lower-next-button-container">
             <div class="product-lower-next-button">
-                <i class="fa fa-toggle-left right-product-left-button"></i>
-                <input class="right-upper-right-product-input" type="text" value="1" readonly>
-                <p>of 22</p>
-                <i class="fa fa-toggle-right right-product-left-button"></i>
+                <i class="fa fa-toggle-left right-product-left-button" v-on:click="decrementPage"></i>
+                <input class="right-upper-right-product-input" type="text" :value=this.$store.state.filterOptions.page readonly>
+                <p>of &nbsp; {{Math.ceil(getProducts.total_results/24)}}</p>
+                <i class="fa fa-toggle-right right-product-left-button" v-on:click="incrementPage"></i>
             </div>
         </div>
 
@@ -73,7 +73,10 @@
 export default{
     data(){
         return{
-            page:1
+            payload:{
+                page:1,
+                selectedOption:''
+            }
         }
     },
     computed:{
@@ -88,39 +91,43 @@ export default{
         this.$store.dispatch('fetchProducts');
     },
     methods:{
-        relevanceFilter(event){
-            if(event.target.value=='relevance'){
-                this.$store.dispatch('relevance');
-                return this.$store.getters.relevance
-            }
-            else if(event.target.value=='latest'){
-                this.$store.dispatch('latest');
-                return this.$store.getters.latest
-            }
-            else if(event.target.value=='lowtohigh'){
-                this.$store.dispatch('lowToHigh');
-                return this.$store.getters.lowToHigh
-            }
-            else if(event.target.value=='hightolow'){
-                this.$store.dispatch('highToLow');
-                return this.$store.getters.highToLow
-            }
-            else if(event.target.value=='moqLowToHigh'){
-                this.$store.dispatch('MOQlowToHigh');
-                return this.$store.getters.MOQlowToHigh
-            }
-            else if(event.target.value=='ratingsHighToLow'){
-                this.$store.dispatch('ratingsHighToLow');
-                return this.$store.getters.ratingsHighToLow
-            }
-        },
-        zikTest(){
-            console.log(this.$store.state.products.total_results)
+
+        grandFilter1(payload){
+            this.$store.dispatch('grandFilter', payload)
+            return this.$store.getters.grandFilter
         },
         nextPage(){
-            this.$store.dispatch('nextPage', ++this.page);
-            return this.$store.getters.nextPage
-        }
+            this.payload.page++
+            this.grandFilter(this.payload);
+        },
+        grandFilter(){
+            this.$store.dispatch('grandFilter')
+            return this.$store.getters.grandFilter
+        },
+        prePage(){
+            this.payload.page--
+            this.grandFilter(this.payload);
+        },
+        // optionValue(event){
+        //     this.payload.selectedOption=event.target.value
+        //     this.grandFilter(this.payload);
+        // },
+        sortByFilter(event){
+            this.$store.dispatch('sortByFilter',event.target.value)
+            this.grandFilter();
+        },
+        relevanceFilter(){
+            console.log(payload)
+            this.grandFilter(this.payload);
+        },
+        incrementPage() {
+            this.$store.dispatch('incrementPage')
+            this.grandFilter()
+        },
+        decrementPage() {
+            this.$store.dispatch('decrementPage')
+            this.grandFilter()
+        },
     }
 }
 </script>
@@ -232,15 +239,10 @@ export default{
     padding: 0 20px;
 }
 .product-lower-next-button{
-    display: flex;
-    /* background-color: crimson; */
-    justify-content: right;
-    align-items: center;
-}
-.product-lower-next-button{
-    width: 250px;
+    width: 14vw;
     display: flex;
     justify-content: space-between;
+    align-items: center;
     
 }
 .product-lower-next-button button{

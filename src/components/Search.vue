@@ -1,37 +1,122 @@
 <template>
     <div class="search-parent">
-        <div class="search-container">
-            <div class="search-left">
-                <i class="fa fa-window-restore	search-category-icon"></i>
-                <p style="font-size: 18px;">Categories</p>
-            </div>
-            <div class="search-middle">
-                <input class="search-middle-input" type="text" placeholder="What are you looking for?">
-                <select class="search-select-all-categories">
-                    <option>All Categories</option>
-                    <option>PPE</option>
-                    <option>Health & Medical</option>
-                    <option>Garden & Outdoor</option>
-                    <option>Sports & Fitness</option>
-                    <option>Other</option>
-                    <option>Baby</option>
-                </select>
-            </div>
-            <div class="search-right">
-                <button class="search-right-button">Search</button>
+            <div>
+                <div class="search-container">
+                    <div class="search-left" @click="isCategory=!isCategory">
+                        <i class="fa fa-window-restore	search-category-icon"></i>
+                        <p style="font-size: 18px;">Categories</p>
+                    </div>
+                    <div class="search-middle">
+                        <input class="search-middle-input" type="text" placeholder="What are you looking for?">
+                        <select class="search-select-all-categories">
+                            <option>All Categories</option>
+                            <option>PPE</option>
+                            <option>Health & Medical</option>
+                            <option>Garden & Outdoor</option>
+                            <option>Sports & Fitness</option>
+                            <option>Other</option>
+                            <option>Baby</option>
+                        </select>
+                    </div>
+                    <div class="search-right">
+                        <button class="search-right-button">Search</button>
+                    </div>
+                </div>
+        </div>
+
+        <div v-if="isCategory" class="category-drop-down">
+            <div v-for="(parent, index) in getCategories.categories" :key="index" class="search-category-dropdown-parent" >
+                <ul>
+                    <li class="search-category-dropdown-parent-category" @click="category(parent.category_slug)" >{{ parent.category_name }}</li>
+                </ul>
+                <ul v-for="(item, index) in parent.sub_categories" :key="index">
+                    <li class="search-category-dropdown-sub-category" @click="category(item.category_slug)" >{{ item.category_name }}</li>
+                </ul>
             </div>
         </div>
+
     </div>
 </template>
 
 <script>
 export default{
-
+    data(){
+        return{
+            isCategory:false
+        }
+    },
+    computed:{
+        getCategories(){
+            return this.$store.getters.getCategories
+        }
+    },
+    created(){
+        this.$store.dispatch('fetchCategories')
+    },
+    methods:{
+        category(payload){
+            this.isCategory=false
+            this.$store.dispatch('category',payload)
+            this.$store.dispatch('grandFilter')
+            this.$store.dispatch('fetchFilters')
+        },
+    }
 }
 
 </script>
 
 <style>
+.category-drop-down{
+    /* position: absolute; */
+    background-color:#F2F2F2;
+    /* padding: 30px;
+    position: inherit; */
+    display: flex;
+    justify-content: space-between;
+    /* align-items: center; */
+}
+.category-drop-down ul{
+    padding: 0;
+    margin: 0;
+}
+.search-category-dropdown-parent{
+    padding: 20px;
+  
+    /* display: flex;
+    justify-content: space-between; */
+    /* width: 100%; */
+    
+    /* padding: 30px; */
+    /* position: absolute; */
+    /* z-index: 999; */
+    /* overflow-x: scroll; */
+    /* padding: 0;
+    margin: 0; */
+}
+/* .search-category-dropdown ul{
+    padding: 0;
+    margin: 0;
+} */
+.search-category-dropdown-parent-category{
+    font-size: 18px;
+    font-weight: 600;
+    list-style-type: none;
+    /* background-color: crimson; */
+    cursor: pointer;
+}
+.search-category-dropdown-parent-category:hover{
+    color:#5CB674;
+}
+.search-category-dropdown-sub-category:hover{
+    color:#5CB674;
+}
+.search-category-dropdown-sub-category{
+    font-size: 15px;
+    font-weight: 500;
+    list-style-type: none;
+    margin-top: 10px;
+    cursor: pointer;
+}
 .search-category-icon{
     font-size: 24px;
     margin-right: 20px;
@@ -44,12 +129,13 @@ export default{
     cursor: pointer;
 }
 .search-parent{
-    display: flex;
-    justify-content: center;
+    /* display: flex;
+    justify-content: center; */
     margin-top: 30px;
+    width: 100%;
 }
 .search-container{
-    width: 100%;
+    
     display: flex;
     justify-content: space-between;
     background-color: #F2F2F2;
@@ -59,7 +145,8 @@ export default{
 }
 .search-middle-input{
     height: 15px;
-    width: 950px;
+    /* width: 950px; */
+    width: 50vw;
     padding: 15px;
     border-radius: 50px;
     font-size: 18px;
