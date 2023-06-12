@@ -1,17 +1,24 @@
 <template>
     <div class="below-search-parent">
         <div class="below-search-left">
-            <div v-for="(item, index) in getFilters.category_breadcrumbs" :key=index>
-                <p>{{ item.category_name }}  &nbsp; &nbsp;</p>
+            <div v-for="(item, index) in lastFiveItems" :key="index">
+                <p>{{ item.category_name }}&nbsp; &nbsp;</p>
+               
+                <!-- <p>{{ index }}&nbsp; &nbsp;</p> -->
             </div>
+            <!-- <p>Products</p> -->
             <div class="below-search-number-of-products">
                 ({{getProducts.total_results}} Products)
             </div>
         </div>
-        <div style="display: flex;" class="below-search-middle">
-            Buy
+        <div class="below-search-middle">
+            <div class="zik-test">
+                Buy
             <div v-for="(item, index) in getFilters.category_breadcrumbs" :key=index >
             <p>/{{ item.category_name }}</p>
+        </div>
+            
+            
         </div>
         </div>
         
@@ -37,6 +44,9 @@ export default{
         getFilters(){
             return this.$store.getters.getFilters
         },
+        lastFiveItems(){
+            return this.getFilters.category_breadcrumbs?.slice(-1).reverse()
+        }
     },
     created(){
         this.$store.dispatch('fetchProducts')
@@ -56,16 +66,32 @@ export default{
 }
 .below-search-left{
     display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
     font-size: 20px;
     font-weight: 500;
+    width: 290px;
+    /* background-color: crimson;     */
 }
 .below-search-number-of-products{
     color: #918E8F;
     font-weight: 500;
 }
 .below-search-middle{
-    margin-right: 470px;
+    display: flex;
+    position: absolute;
+    /* background-color: crimson; */
+    align-items: center;
+    justify-content: center;
+    margin-left: 310px;
     color: #918E8F;
+    
+}
+.zik-test{
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .below-search-right{
     background-image: url('../assets/textBackground.png');

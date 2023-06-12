@@ -7,19 +7,14 @@
                         <p style="font-size: 18px;">Categories</p>
                     </div>
                     <div class="search-middle">
-                        <input class="search-middle-input" type="text" placeholder="What are you looking for?">
-                        <select class="search-select-all-categories">
-                            <option>All Categories</option>
-                            <option>PPE</option>
-                            <option>Health & Medical</option>
-                            <option>Garden & Outdoor</option>
-                            <option>Sports & Fitness</option>
-                            <option>Other</option>
-                            <option>Baby</option>
+                        <input class="search-middle-input" type="text" v-model="searchKey" placeholder="What are you looking for?">
+                        <select class="search-select-all-categories" @change="submitSearch($event)">
+                            <option value="default">All Categories</option>
+                            <option v-for="(parent, index) in getCategories.categories" :key="index">{{parent.category_name}}</option>
                         </select>
                     </div>
                     <div class="search-right">
-                        <button class="search-right-button">Search</button>
+                        <button class="search-right-button" @click="submitSearch">Search</button>
                     </div>
                 </div>
         </div>
@@ -42,7 +37,8 @@
 export default{
     data(){
         return{
-            isCategory:false
+            isCategory:false,
+            searchKey:''
         }
     },
     computed:{
@@ -56,10 +52,16 @@ export default{
     methods:{
         category(payload){
             this.isCategory=false
+            this.searchKey=''
             this.$store.dispatch('category',payload)
             this.$store.dispatch('grandFilter')
             this.$store.dispatch('fetchFilters')
         },
+        submitSearch(){
+            this.$store.dispatch('searchKey',this.searchKey)
+            this.$store.dispatch('grandFilter')
+            this.$store.dispatch('fetchFilters')
+        }
     }
 }
 
@@ -98,7 +100,7 @@ export default{
     margin: 0;
 } */
 .search-category-dropdown-parent-category{
-    font-size: 18px;
+    font-size: 14px;
     font-weight: 600;
     list-style-type: none;
     /* background-color: crimson; */
@@ -163,7 +165,7 @@ export default{
     cursor: pointer;
 }
 .search-select-all-categories{
-    margin-left: -200px;
+    margin-left: -250px;
     font-size: 18px;
     background: rgba(0, 0, 0, 0);
     border: none;

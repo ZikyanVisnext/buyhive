@@ -6,8 +6,8 @@
 
             <div class="right-parent-upper-left">
                 <!-- <button>btn1</button> -->
-                <i class="fa fa-navicon product-box-view"></i>
-                <i class="fa fa-window-restore	product-list-view"></i>
+                <i class="fa fa-navicon product-box-view" :class="view1?'change-view1-button-color-dynamic':'change-view2-button-color-dynamic'" @click="changeView1"></i>
+                <i class="fa fa-window-restore	product-list-view" :class="view2?'change-view1-button-color-dynamic':'change-view2-button-color-dynamic'" @click="changeView2"></i>
                 <!-- <button class="right-parent-upper-left-button-2">btn2</button> -->
             </div>
             <div class="right-parent-upper-right">
@@ -27,21 +27,31 @@
                 <i class="fa fa-toggle-left right-product-left-button" v-on:click="decrementPage"></i>
                 <input class="right-upper-right-product-input" type="text" :value=this.$store.state.filterOptions.page readonly>
                 <p>of &nbsp; {{Math.ceil(getProducts.total_results/24)}}</p>
-                <i class="fa fa-toggle-right right-product-left-button" v-on:click="incrementPage"></i>
+                <i class="fa fa-toggle-right right-product-left-button" v-on:click="incrementPage(Math.ceil(getProducts.total_results/24))"></i>
             </div>
         </div>
 
         <!-- Products display section -->
 
         <div class="right-parent-lower">
-            <div class="right-product-display" v-for="(item, index) in getProducts.products" :key="index">
-                <div  class="single-product-container">
-                    <img class="product-image" v-bind:src=item.images[0].url alt="">
+            <div v-bind:class="view1?'right-product-display':'right-product-display-view-2'" v-for="(item, index) in getProducts.products" :key="index">
+                <div  v-bind:class="view1?'single-product-container':'single-product-container-view-2'">
+                    <div class="single-image-display-center">
+                        <img class="product-image" v-bind:src=item.images[0].url alt="">    
+                    </div>
+                    
+                    <div v-if="item.stock_in_usa" class="product-stock-in-usa">
+                        <img class="product-main-image" src="../assets/usa.png" width="25px">
+                        <span style="font-size: 14px;">&nbsp;Stock in USA</span>
+                    </div>
                     <div class="product-info-text">
                         <!-- <p>Rolhei 75% Ethanol Wet Wipe - 100 co...</p> -->
-                        <P>{{ item.product_name }}</P>
+                        <P v-bind:class="!item.stock_in_usa?'stock_usa_false':''">{{ item.product_name }}</P>
                         <p class="product-moq-price-text">MOQ: {{item.display_moq}}</p>
                         <p class="product-price-text">{{item.price}}</p>
+                    </div>
+                    <div class="add-cart-button-parent">
+                        <button class="add-cart-button">Add to cart</button>
                     </div>
                 </div>
             </div>
@@ -54,7 +64,7 @@
                 <i class="fa fa-toggle-left right-product-left-button" v-on:click="decrementPage"></i>
                 <input class="right-upper-right-product-input" type="text" :value=this.$store.state.filterOptions.page readonly>
                 <p>of &nbsp; {{Math.ceil(getProducts.total_results/24)}}</p>
-                <i class="fa fa-toggle-right right-product-left-button" v-on:click="incrementPage"></i>
+                <i class="fa fa-toggle-right right-product-left-button" v-on:click="incrementPage(Math.ceil(getProducts.total_results/24))"></i>
             </div>
         </div>
 
@@ -73,10 +83,8 @@
 export default{
     data(){
         return{
-            payload:{
-                page:1,
-                selectedOption:''
-            }
+            view1:true,
+            view2:false
         }
     },
     computed:{
@@ -120,19 +128,59 @@ export default{
             console.log(payload)
             this.grandFilter(this.payload);
         },
-        incrementPage() {
-            this.$store.dispatch('incrementPage')
+        incrementPage(item) {
+            this.$store.dispatch('incrementPage', item)
             this.grandFilter()
         },
         decrementPage() {
             this.$store.dispatch('decrementPage')
             this.grandFilter()
         },
+        changeView1(){
+            this.view1=true
+            this.view2=false
+        },
+        changeView2(){
+            this.view1=false
+            this.view2=true
+        }
     }
 }
 </script>
 
 <style>
+.change-view1-button-color-dynamic{
+    color: #000;
+}
+.change-view2-button-color-dynamic{
+    color: #918E8F;
+}
+.add-cart-button-parent{
+    display: flex;
+    justify-content: center;
+    margin: 20px;
+}
+.add-cart-button{
+    display: none;
+    border: 1px solid #47B3CA;
+    background-color: #47B3CA;
+    width: 100%;
+    height: 35px;
+    border-radius: 10px;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+}
+.single-image-display-center{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+.product-stock-in-usa{
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+}
 .right-parent-lower{
     /* background-color: crimson; */
     display: flex;
@@ -154,7 +202,7 @@ export default{
     font-size: 24px;
     cursor: pointer;
     margin-left: 20px;
-    color: #918E8F;
+  
 }
 .right-component-parent{
     margin: 20px 0 20px 20px;
@@ -197,18 +245,66 @@ export default{
     border: 1px solid #c8c5c5;
 }
 .right-product-display{
+    display: flex;
+    flex: 1;
+    width: 100%;
+    /* background-color: crimson; */
     /* display: flex;
     flex-wrap: wrap; */
     /* background-color: crimson; */
     justify-content: space-between;
+    align-items: center;
+    /* align-items: center; */
     /* align-items: center; */
     margin-top: 20px;
     /* padding: 20px; */
 }
+.right-product-display-view-2{
+    display: flex;
+    width: 100%;
+    /* background-color: crimson; */
+    /* display: flex;
+    flex-wrap: wrap; */
+    /* background-color: crimson; */
+    justify-content: space-between;
+    align-items: center;
+    /* align-items: center; */
+    /* align-items: center; */
+    margin-top: 20px;
+    /* padding: 20px; */
+}
+.single-product-container{
+    /* display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center; */
+    flex: 1;
+    /* background-color: aqua; */
+    /* width: 350px; */
+    margin: 0px;
+    /* margin: 20px; */
+    /* margin-bottom: 50px; */
+    border-radius: 8px;
+    /* height: 400px; */
+}
+.single-product-container-view-2{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex: 1;
+    /* background-color: aqua; */
+    /* width: 350px; */
+    margin: 0px;
+    /* margin: 20px; */
+    /* margin-bottom: 50px; */
+    border-radius: 8px;
+    /* height: 400px; */
+    border: 1px solid #000;
+}
 .product-image{
     width: 280px;
     /* max-height: 250px; */
-    height: 250px;
+    height: 280px;
     padding: 0px 20px;
     object-fit: contain;
 }
@@ -219,17 +315,10 @@ export default{
 .product-price-text{
     font-weight: bold;
 }
-.single-product-container{
-    /* display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center; */
-    width: 355px;
-    margin-bottom: 50px;
-    border-radius: 8px;
-    height: 400px;
-}
 .single-product-container:hover{
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+.single-product-container-view-2:hover{
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
 .single-product-container p{
@@ -238,8 +327,12 @@ export default{
 .product-info-text{
     padding: 0 20px;
 }
+.stock_usa_false{
+    /* padding: 0; */
+    margin-top: 40px;
+}
 .product-lower-next-button{
-    width: 14vw;
+    width: 15.5vw;
     display: flex;
     justify-content: space-between;
     align-items: center;

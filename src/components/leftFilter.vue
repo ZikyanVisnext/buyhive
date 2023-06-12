@@ -49,7 +49,7 @@
             </div>
             <div class="left-filter-cert-checkbox">
                 <div class="left-filter-big-checkbox" v-for="(item, index) in getFilters.product_certification" :key="index">
-                    <input type="checkbox" :value=item  @change="updateCheckedValues($event, item.value)">
+                    <input type="checkbox" :value=item v-model="productCertificates" @change="proCertFilter">
                     <span>&nbsp; &nbsp; {{item}}</span>
                 </div>
             </div>
@@ -66,7 +66,7 @@
             </div>
             <div class="left-filter-supply-checkbox">
                 <div class="left-filter-big-checkbox" v-for="(item, index) in getFilters.supplier_certification" :key="index">
-                    <input type="checkbox" >
+                    <input type="checkbox" :value= "'&has_'+item+'=true'" v-model="productSupply" @change="proSupplyFilter">
                     <span>&nbsp; &nbsp; {{item}}</span>
                 </div>
             </div>
@@ -83,7 +83,7 @@
             </div>
             <div class="left-filter-cert-checkbox">
                 <div class="left-filter-big-checkbox" v-for="(item, index) in getFilters.supplier_locations" :key="index">
-                    <input type="checkbox" >
+                    <input type="checkbox" :value=item v-model="productCountry" @change="proCountryFilter">
                     <span>&nbsp; &nbsp; {{item}}</span>
                 </div>
             </div>
@@ -93,7 +93,7 @@
         <div v-if="getFilters.stock_in_usa_filter" class="left-filter-stock">
             <p>Stock Availability</p>
             <div class="left-filter-stock-flex">
-                <input type="checkbox">
+                <input type="checkbox"  @click="usaStockFunction">
                 <img src="../assets/usa.png" width="25px">
                 <span style="font-size: 14px;">&nbsp;in USA</span>
             </div>
@@ -107,17 +107,21 @@
 export default{
     data(){
         return{
-            proCert:[],
-            // proCertOptions:[],
-            payload:{
-                proCertOptions:[]
-            }
+            productCertificates:[],
+            productCountry:[],
+            productSupply:[],
+            usaStock: ''
         }
     },
     computed:{
         getFilters(){
             return this.$store.getters.getFilters
         },
+        // filteredBlog(){
+        //     return this.blogs.filter((blog)=>{
+        //         return blog.title.match(this.search)
+        //     })
+        // }
     },
     created(){
         this.$store.dispatch('fetchFilters')
@@ -134,20 +138,30 @@ export default{
             this.$store.dispatch('grandFilter', this.payload)
             return this.$store.getters.grandFilter
         },
-        proCerFilter(productCertificate){
-            this.$store.dispatch('sortByFilter',productCertificate)
+        // proCerFilter(productCertificate){
+        //     this.$store.dispatch('sortByFilter',productCertificate)
+        //     this.$store.dispatch('grandFilter')
+        //     return this.$store.getters.grandFilter
+        // },
+        
+        proCertFilter(){
+            this.$store.dispatch('joinCertificate', this.productCertificates)
             this.$store.dispatch('grandFilter')
-            return this.$store.getters.grandFilter
         },
-        updateCheckedValues(event, value) {
-      const isChecked = event.target.checked;
-      if (isChecked) {
-        this.$store.commit('updateCheckedValues', [...this.$store.state.filterOptions.checkedValues, value]);
-      } else {
-        const updatedValues = this.$store.state.filterOptions.checkedValues.filter((v) => v !== value);
-        this.$store.commit('updateCheckedValues', updatedValues);
-      }
-    },
+        proCountryFilter(){
+            this.$store.dispatch('joinCountry', this.productCountry)
+            this.$store.dispatch('grandFilter')
+        },
+        proSupplyFilter(){
+            this.$store.dispatch('joinSupply', this.productSupply)
+            this.$store.dispatch('grandFilter')
+            // console.log(this.productSupply)
+        },
+        usaStockFunction(){
+            this.$store.dispatch('usaStock')
+            this.$store.dispatch('grandFilter')
+            // console.log(this.productSupply)
+        },
     }
 }
 </script>

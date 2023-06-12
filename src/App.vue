@@ -36,7 +36,8 @@ export default {
 
 <style scoped>
 #app{
-  margin: 30px 220px;
+  /* margin: 30px 220px; */
+  margin: 30px 10%;
   padding: 0;
 }
 .left-right-components{

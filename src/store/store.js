@@ -13,9 +13,13 @@ export const store=new Vuex.Store({
         categories:'',
         filterOptions:{
             page:1,
-            sortBy:''
+            sortBy:'',
+            certificate:[],
+            country:[],
+            supply:[],
+            usaStock: false,
+            key:''
         },
-        leftDynamicFilter:''
     },
     getters:{
         getProducts:(state)=>state.products,
@@ -26,9 +30,10 @@ export const store=new Vuex.Store({
         // pageNumber:(state)=>state.filterOptions.page,
         // sortBy:(state)=> state.filterOptions.sortBy,
         // productCertification:(state)=>state.filterOptions.proCert
-        joinedValues(state) {
-            return state.filterOptions.checkedValues.join(',');
-          },
+        // joinedValues(state) {
+        //     return state.filterOptions.checkedValues.join(',');
+        // },
+        // proCertFilter:(state) => state.filterOptions.certificate.join(','),
     },
     actions:{
         fetchProducts: async (context)=>{
@@ -59,7 +64,7 @@ export const store=new Vuex.Store({
         // },
         grandFilter: async (context)=>{
             try {
-                const data = await axios.get('https://portal.thebuyhive.com/api/ecom/v2/search?keyword=&category='+encodeURIComponent(context.state.filterOptions.category?context.state.filterOptions.category:'')+'&page='+context.state.filterOptions.page+'&certificates=&sort_by='+context.state.filterOptions.sortBy)
+                const data = await axios.get('https://portal.thebuyhive.com/api/ecom/v2/search?keyword='+context.state.filterOptions.key+'&category='+encodeURIComponent(context.state.filterOptions.category?context.state.filterOptions.category:'')+'&page='+context.state.filterOptions.page+'&country='+context.state.filterOptions.country+'&certificates='+context.state.filterOptions.certificate+'&sort_by='+context.state.filterOptions.sortBy+(context.state.filterOptions.usaStock?'&stock_in_usa=true':''))
                 context.commit('GRAND_FILTER', data.data)
             } catch (error) {
                 console.log(error)
@@ -67,15 +72,15 @@ export const store=new Vuex.Store({
         },
         fetchFilters: async (context)=>{
             try {
-                const data = await axios.get('https://portal.thebuyhive.com/api/ecom/v2/search-filter?keyword=&category='+encodeURIComponent(context.state.filterOptions.category?context.state.filterOptions.category:'')+'&page=1&sort_by=default')
+                const data = await axios.get('https://portal.thebuyhive.com/api/ecom/v2/search-filter?keyword='+context.state.filterOptions.key+'&category='+encodeURIComponent(context.state.filterOptions.category?context.state.filterOptions.category:'')+'&page=1&sort_by=default')
                 context.commit('SET_FILTERS', data.data.filters)
-                console.log(data.data.filters)
+                // console.log(data.data.filters)
             } catch (error) {
                 console.log(error)
             }
         },
-        incrementPage:(context)=>{
-            context.commit('INCREMENT_PAGE')
+        incrementPage:(context, totalProducts)=>{
+            context.commit('INCREMENT_PAGE', totalProducts)
         },
         decrementPage:(context)=>{
             context.commit('DECREMENT_PAGE')
@@ -85,6 +90,21 @@ export const store=new Vuex.Store({
         },
         category:(context, payload)=>{
             context.commit('CATEGORY', payload)
+        },
+        joinCertificate:(context, payload)=>{
+            context.commit('JOIN_CERTIFICATE', payload)
+        },
+        joinCountry:(context, payload)=>{
+            context.commit('JOIN_COUNTRY', payload)
+        },
+        joinSupply:(context, payload)=>{
+            context.commit('JOIN_SUPPLY', payload)
+        },
+        usaStock:(context, payload)=>{
+            context.commit('USA_STOCK', payload)
+        },
+        searchKey:(context, payload)=>{
+            context.commit('SEARCH_KEY', payload)
         },
     },
     mutations:{
@@ -100,8 +120,10 @@ export const store=new Vuex.Store({
         SET_FILTERS(state, filters){
             state.filters=filters
         },
-        INCREMENT_PAGE(state) {
+        INCREMENT_PAGE(state, payload) {
+        if(payload>1){
             state.filterOptions.page++
+        }    
         },
         DECREMENT_PAGE(state) {
             if(state.filterOptions.page>1){
@@ -113,6 +135,24 @@ export const store=new Vuex.Store({
         },
         CATEGORY(state, payload){
             state.filterOptions.category=payload
+            state.filterOptions.key=''
         },
+        JOIN_CERTIFICATE(state, payload){
+            state.filterOptions.certificate=payload
+        },
+        JOIN_COUNTRY(state, payload){
+            state.filterOptions.country=payload
+        },
+        JOIN_SUPPLY(state, payload){
+            state.filterOptions.supply=payload
+        },
+        USA_STOCK(state){
+            state.filterOptions.usaStock=!state.filterOptions.usaStock
+            // console.log(state.filterOptions.usaStock)
+        },
+        SEARCH_KEY(state, payload){
+            state.filterOptions.key=payload
+            state.filterOptions.category=''
+        }
     }
 })
