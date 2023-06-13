@@ -24,8 +24,17 @@
                         <option value="ratings_high_to_low">Ratings High to Low</option>
                     </select>
                 </div>
-                <i class="fa fa-toggle-left right-product-left-button" v-on:click="decrementPage"></i>
-                <input class="right-upper-right-product-input" type="text" :value=this.$store.state.filterOptions.page readonly>
+                <i
+                    class="fa fa-toggle-left right-product-left-button"
+                    @click="decrementPage"
+                ></i>
+
+                <input
+                    class="right-upper-right-product-input"
+                    type="text"
+                    :value=$store.state.filterOptions.page
+                    readonly
+                >
                 <p>of &nbsp; {{Math.ceil(getProducts.total_results/24)}}</p>
                 <i class="fa fa-toggle-right right-product-left-button" v-on:click="incrementPage(Math.ceil(getProducts.total_results/24))"></i>
             </div>
@@ -34,8 +43,14 @@
         <!-- Products display section -->
 
         <div class="right-parent-lower">
-            <div v-bind:class="view1?'right-product-display':'right-product-display-view-2'" v-for="(item, index) in getProducts.products" :key="index">
-                <div  v-bind:class="view1?'single-product-container':'single-product-container-view-2'">
+            <div
+                :class="view1 ? 'right-product-display' : 'right-product-display-view-2'"
+                v-for="(item, index) in getProducts.products"
+                :key="index"
+                @mouseover="showButton(index)"
+                @mouseleave="showButton(null)"
+            >
+                <div v-bind:class="view1?'single-product-container':'single-product-container-view-2'">
                     <div class="single-image-display-center">
                         <img class="product-image" v-bind:src=item.images[0].url alt="">    
                     </div>
@@ -46,19 +61,21 @@
                     </div>
                     <div class="product-info-text">
                         <!-- <p>Rolhei 75% Ethanol Wet Wipe - 100 co...</p> -->
-                        <P v-bind:class="!item.stock_in_usa?'stock_usa_false':''">{{ item.product_name }}</P>
+                        <P v-bind:class="!item.stock_in_usa?'stock_usa_false':''">{{item.product_name.length>40? item.product_name.slice(0,40)+'...':item.product_name }}</P>
                         <p class="product-moq-price-text">MOQ: {{item.display_moq}}</p>
                         <p class="product-price-text">{{item.price}}</p>
                     </div>
-                    <div class="add-cart-button-parent">
-                        <button class="add-cart-button">Add to cart</button>
+                    <div  class="add-cart-button-parent">
+                        <button v-show="showButtonId === index" class="add-cart-button-show">Add to cart</button>
                     </div>
                 </div>
             </div>
 
-        <!-- Next page pf products arrow buttons -->
-                  
         </div>
+
+        <!-- Next page of products arrow buttons -->
+                  
+
         <div class="product-lower-next-button-container">
             <div class="product-lower-next-button">
                 <i class="fa fa-toggle-left right-product-left-button" v-on:click="decrementPage"></i>
@@ -83,8 +100,9 @@
 export default{
     data(){
         return{
-            view1:true,
-            view2:false
+            view1: true,
+            view2: false,
+            showButtonId: null
         }
     },
     computed:{
@@ -141,8 +159,14 @@ export default{
             this.view2=false
         },
         changeView2(){
-            this.view1=false
-            this.view2=true
+            this.view1 = false
+            this.view2 = true
+        },
+        showButton(productId) {
+            this.showButtonId = productId;
+        },
+        hideButton() {
+            this.showButtonId = null;
         }
     }
 }
@@ -162,6 +186,9 @@ export default{
 }
 .add-cart-button{
     display: none;
+}
+.add-cart-button-show{
+    display: block;
     border: 1px solid #47B3CA;
     background-color: #47B3CA;
     width: 100%;
@@ -279,6 +306,7 @@ export default{
     justify-content: center;
     align-items: center; */
     flex: 1;
+    height: 450px;
     /* background-color: aqua; */
     /* width: 350px; */
     margin: 0px;

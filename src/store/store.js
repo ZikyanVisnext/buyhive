@@ -14,16 +14,19 @@ export const store=new Vuex.Store({
         filterOptions:{
             page:1,
             sortBy:'',
-            certificate:[],
-            country:[],
-            supply:[],
+            certificate: [],
+            country: [],
+            supply: [],
             usaStock: false,
-            key:''
-        },
+            key: '',
+            moqSearch: null,
+            minPrice: 0,
+            maxPrice: 6900
+        }
     },
     getters:{
-        getProducts:(state)=>state.products,
-        grandFilter:(state)=>state.products,
+        getProducts:(state) => state.products,
+        grandFilter:(state) => state.products,
 
         getFilters:(state)=>state.filters,
         getCategories:(state)=>state.categories,
@@ -64,7 +67,13 @@ export const store=new Vuex.Store({
         // },
         grandFilter: async (context)=>{
             try {
-                const data = await axios.get('https://portal.thebuyhive.com/api/ecom/v2/search?keyword='+context.state.filterOptions.key+'&category='+encodeURIComponent(context.state.filterOptions.category?context.state.filterOptions.category:'')+'&page='+context.state.filterOptions.page+'&country='+context.state.filterOptions.country+'&certificates='+context.state.filterOptions.certificate+'&sort_by='+context.state.filterOptions.sortBy+(context.state.filterOptions.usaStock?'&stock_in_usa=true':''))
+                const data = await axios.get('https://portal.thebuyhive.com/api/ecom/v2/search?keyword='+context.state.filterOptions.key+
+                '&category='+encodeURIComponent(context.state.filterOptions.category?context.state.filterOptions.category:'')+
+                '&page='+context.state.filterOptions.page+'&min_price='+context.state.filterOptions.minPrice+'&max_price='+context.state.filterOptions.maxPrice+'&country='+context.state.filterOptions.country+'&certificates='+
+                context.state.filterOptions.certificate+'&sort_by='+context.state.filterOptions.sortBy+
+                (context.state.filterOptions.moqSearch?('&moq='+context.state.filterOptions.moqSearch):'')+
+                (context.state.filterOptions.usaStock?'&stock_in_usa=true':''))
+
                 context.commit('GRAND_FILTER', data.data)
             } catch (error) {
                 console.log(error)
@@ -106,6 +115,12 @@ export const store=new Vuex.Store({
         searchKey:(context, payload)=>{
             context.commit('SEARCH_KEY', payload)
         },
+        moqSearch:(context, payload)=>{
+            context.commit('MOQ_SEARCH', payload)
+        },
+        priceSearch:(context, payload)=>{
+            context.commit('PRICE_SEARCH', payload)
+        },
     },
     mutations:{
         SET_PRODUCTS(state, products){
@@ -136,6 +151,7 @@ export const store=new Vuex.Store({
         CATEGORY(state, payload){
             state.filterOptions.category=payload
             state.filterOptions.key=''
+            state.filterOptions.moqSearch=null
         },
         JOIN_CERTIFICATE(state, payload){
             state.filterOptions.certificate=payload
@@ -153,6 +169,13 @@ export const store=new Vuex.Store({
         SEARCH_KEY(state, payload){
             state.filterOptions.key=payload
             state.filterOptions.category=''
+        },
+        MOQ_SEARCH(state, payload){
+            state.filterOptions.moqSearch=payload
+        },
+        PRICE_SEARCH(state, payload){
+            state.filterOptions.minPrice=payload.minPrice
+            state.filterOptions.maxPrice=payload.maxPrice
         }
     }
 })

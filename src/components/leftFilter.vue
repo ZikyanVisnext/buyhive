@@ -6,12 +6,12 @@
             <div v-if="getFilters.categories?.length>=1" class="left-filter-cert-container">
             <div class="left-filter-cert-container-inner">
                 <div class="cert-filter">
-                <input type="text" placeholder="More Categories">
+                <input type="text" placeholder="More Categories" v-model="moreCategoriesSearch" @change="moreCategoriesSearchFunction">
             </div>
             <div class="left-filter-cert-checkbox">
-                <div class="left-filter-big-checkbox" v-for="(item, index) in getFilters.categories" :key="index">
+                <div class="left-filter-big-checkbox" v-for="(item, index) in moreCategoriesSearchFunction" :key="index">
                     <!-- <input type="checkbox" :value=item  @change="updateCheckedValues($event, item.value)"> -->
-                    <p>{{item.category_name}}</p>
+                    <p style="padding: 0; margin: 5px;">{{item.category_name}}</p>
                 </div>
             </div>
             </div>
@@ -22,10 +22,10 @@
         <div class="left-filter-price-container">
             <p>Price</p>
             <div class="price-filter">
-                <input type="number" value="0">
+                <input type="number" value="0" placeholder="from" v-model="price.minPrice" @input="handlePrice">
                 <!-- <p>$</p> -->
                 <p>&nbsp;-&nbsp;</p>
-                <input type="numer" value="6900">
+                <input type="numer" value="6900" placeholder="to" v-model="price.maxPrice" @input="handlePrice">
                 <!-- <span>$</span> -->
             </div>
         </div>
@@ -35,7 +35,7 @@
         <div class="left-filter-moq-container">
             <p>MOQ</p>
             <div class="moq-filter">
-                <input type="number" placeholder="Less than">
+                <input type="number" placeholder="Less than" v-model="moqSearch" @input="handleMoqSearch">
             </div>
         </div>
 
@@ -45,15 +45,19 @@
             <p>Product Certification</p>
             <div class="left-filter-cert-container-inner">
                 <div class="cert-filter">
-                <input type="text" placeholder="Product Certifications...">
+                <input type="text" placeholder="Product Certifications..." v-model="productSearch" @change="productSearchFunction">
             </div>
             <div class="left-filter-cert-checkbox">
-                <div class="left-filter-big-checkbox" v-for="(item, index) in getFilters.product_certification" :key="index">
+                <div class="left-filter-big-checkbox" v-for="(item, index) in productSearchFunction" :key="index">
                     <input type="checkbox" :value=item v-model="productCertificates" @change="proCertFilter">
                     <span>&nbsp; &nbsp; {{item}}</span>
                 </div>
             </div>
             </div>
+            <!-- <button v-show="!showAll" @click="toggleShowAll">Show All</button>
+            <button v-show="showAll" @click="toggleShowAll">Show Less</button> -->
+            <!-- <button v-show="!showAllButtonVisible" @click="showAll">Show All</button>
+            <button v-show="showAllButtonVisible" @click="showLess">Show Less</button> -->
         </div>
 
         <!-- Supplier Certification -->
@@ -62,10 +66,10 @@
             <p>Supplier Certification</p>
             <div class="left-filter-cert-container-inner">
                 <div class="cert-filter">
-                <input type="text" placeholder="Supplier Certifications...">
+                <input type="text" placeholder="Supplier Certifications..." v-model="supplySearch" @change="supplySearchFunction">
             </div>
             <div class="left-filter-supply-checkbox">
-                <div class="left-filter-big-checkbox" v-for="(item, index) in getFilters.supplier_certification" :key="index">
+                <div class="left-filter-big-checkbox" v-for="(item, index) in supplySearchFunction" :key="index">
                     <input type="checkbox" :value= "'&has_'+item+'=true'" v-model="productSupply" @change="proSupplyFilter">
                     <span>&nbsp; &nbsp; {{item}}</span>
                 </div>
@@ -79,10 +83,10 @@
             <p>Manufacturer Location</p>
             <div class="left-filter-cert-container-inner">
                 <div class="cert-filter">
-                <input type="text" placeholder="Country/Region">
+                <input type="text" placeholder="Country/Region" v-model="countrySearch" @change="countrySearchFunction">
             </div>
             <div class="left-filter-cert-checkbox">
-                <div class="left-filter-big-checkbox" v-for="(item, index) in getFilters.supplier_locations" :key="index">
+                <div class="left-filter-big-checkbox" v-for="(item, index) in countrySearchFunction" :key="index">
                     <input type="checkbox" :value=item v-model="productCountry" @change="proCountryFilter">
                     <span>&nbsp; &nbsp; {{item}}</span>
                 </div>
@@ -110,12 +114,47 @@ export default{
             productCertificates:[],
             productCountry:[],
             productSupply:[],
-            usaStock: ''
+            usaStock: '',
+            moqSearch: null,
+            // searchTimeout: null,
+            price:{
+                minPrice:0,
+                maxPrice:6900
+            },
+            productSearch:'',
+            supplySearch:'',
+            countrySearch:'',
+            moreCategoriesSearch:''
+
+            // items:[],
+            // visibleItems: [],
+            // showAllButtonVisible: true,
+            // maxVisibleItems: 5
         }
     },
     computed:{
         getFilters(){
             return this.$store.getters.getFilters
+        },
+        productSearchFunction(){
+            return this.getFilters.product_certification.filter(item => {
+                return item.toLowerCase().includes(this.productSearch.toLowerCase());
+            });
+        },
+        supplySearchFunction(){
+            return this.getFilters.supplier_certification.filter(item => {
+                return item.toLowerCase().includes(this.supplySearch.toLowerCase());
+            });
+        },
+        countrySearchFunction(){
+            return this.getFilters.supplier_locations.filter(item => {
+                return item.toLowerCase().includes(this.countrySearch.toLowerCase());
+            });
+        },
+        moreCategoriesSearchFunction(){
+            return this.getFilters.categories.filter(item => {
+                return item.category_name.toLowerCase().includes(this.moreCategoriesSearch.toLowerCase());
+            });
         },
         // filteredBlog(){
         //     return this.blogs.filter((blog)=>{
@@ -124,7 +163,8 @@ export default{
         // }
     },
     created(){
-        this.$store.dispatch('fetchFilters')
+        this.items=this.$store.dispatch('fetchFilters')
+        // this.visibleItems = this.items.slice(0, this.maxVisibleItems);
     },
     methods:{
         zikTest(item){
@@ -162,6 +202,50 @@ export default{
             this.$store.dispatch('grandFilter')
             // console.log(this.productSupply)
         },
+        handleMoqSearch() {
+            // clearTimeout(this.searchTimeout);
+            
+            setTimeout(() => {
+                this.$store.dispatch('moqSearch', this.moqSearch)
+                this.$store.dispatch('grandFilter')
+            }, 800); 
+        },
+        handlePrice(){
+            setTimeout(()=>{
+                this.$store.dispatch('priceSearch', this.price)
+                this.$store.dispatch('grandFilter')
+                // console.log(this.minPrice+' -> '+this.maxPrice)
+            },800)
+        },
+        // toggleShowAll() {
+        //     this.showAll = !this.showAll;
+        //     this.getFilters();
+        //     this.updateDisplayedItems()
+        // },
+        // updateDisplayedItems() {
+        //     if (this.showAll) {
+        //         this.displayedItems = this.items;
+        //     } else {
+        //         this.displayedItems = this.items.slice(0, this.maxDisplayedItems);
+        //     }
+        // }
+
+        showAll() {
+            this.visibleItems = [...this.items]; // Show all items
+            this.showAllButtonVisible = false; // Hide "Show All" button
+        },
+        showLess() {
+            this.visibleItems = this.items.slice(0, this.maxVisibleItems); // Show fewer items
+            this.showAllButtonVisible = true; // Show "Show All" button
+        }
+
+
+        // filteredListItems() {
+        //     return this.listItems.filter(item => {
+        //     return item.toLowerCase().includes(this.searchQuery.toLowerCase());
+        //     });
+        // },
+        
     }
 }
 </script>

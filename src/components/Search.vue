@@ -8,7 +8,7 @@
                     </div>
                     <div class="search-middle">
                         <input class="search-middle-input" type="text" v-model="searchKey" placeholder="What are you looking for?">
-                        <select class="search-select-all-categories" @change="submitSearch($event)">
+                        <select class="search-select-all-categories" @change="selectedCategoryFunction($event)">
                             <option value="default">All Categories</option>
                             <option v-for="(parent, index) in getCategories.categories" :key="index">{{parent.category_name}}</option>
                         </select>
@@ -38,7 +38,11 @@ export default{
     data(){
         return{
             isCategory:false,
-            searchKey:''
+            searchKey:'',
+            searchObject:{
+                enteredText:'',
+                selectedCategory:''
+            }
         }
     },
     computed:{
@@ -57,7 +61,11 @@ export default{
             this.$store.dispatch('grandFilter')
             this.$store.dispatch('fetchFilters')
         },
+        selectedCategoryFunction(event){
+            this.searchObject.selectedCategory=event.target.value
+        },
         submitSearch(){
+            console.log(this.searchObject.selectedCategory)
             this.$store.dispatch('searchKey',this.searchKey)
             this.$store.dispatch('grandFilter')
             this.$store.dispatch('fetchFilters')

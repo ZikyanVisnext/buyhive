@@ -1,53 +1,53 @@
 <template>
-<div class="footer-parent">
-
+  <div class="footer-parent">
     <div class="footer-col-container">
-
-        <!-- Footer column 1 -->
-
-        <div class="footer-col-left-generic">
-            <div class="footer-col-1">
-                <img src="../assets/buyHiveLogo.png" alt="buy-hive-logo" width="150px" height="auto">
-                <p class="footer-logo-text">Connecting buyers and manufacturers using the world’s best sourcing experts & technology built by buyers, for buyers.</p>
-                <p class="newsletter-text">Sign Up to Our Newsletter</p>
-                <div class="footer-email-input">
-                    <label class="footer-email-label">Email<span class="email-required">*</span></label>
-                    <input type="text" name="" id="">
-                </div>
-                <button class="footer-submit-button">Submit</button>
-                <div class="footer-follow-container">
-                    <p>Follow Us:</p>
-                    <button class="footer-follow-linkedin">in</button>
-                    <button class="footer-follow-facebook">f</button>
-                </div>
-            </div>
+      <!-- Footer column 1 -->
+      <div class="footer-col-left-generic">
+        <div class="footer-col-1">
+          <img src="../assets/buyHiveLogo.png" alt="buy-hive-logo" width="150px" height="auto">
+          
+          <p class="footer-logo-text">
+            Connecting buyers and manufacturers using the world’s best sourcing experts & technology built by buyers, for buyers.
+          </p>
+          
+          <p class="newsletter-text">Sign Up to Our Newsletter</p>
+          
+          <div class="footer-email-input">
+            <label class="footer-email-label">Email<span class="email-required">*</span></label>
+            <input type="text" name="" id="">
+          </div>
+          
+          <button class="footer-submit-button">Submit</button>
+          
+          <div class="footer-follow-container">
+            <p>Follow Us:</p>
+            
+            <button class="footer-follow-linkedin">in</button>
+            <button class="footer-follow-facebook">f</button>
+          </div>
         </div>
+      </div>
 
-        
-
-    <div class="footer-col-right-generic">
+      <div class="footer-col-right-generic">
         <div class="footer-col-right-inner">
-
-        <!-- Footer column 2 -->
-
-        <div class="footer-col-2">
+          <!-- Footer column 2 -->
+          <div class="footer-col-2">
             <p class="footer-col2-about-text">About Us</p>
+
             <ul class="footer-col2-about" v-for="item in aboutUs">
                 <li>{{ item }}</li>
             </ul>
+
             <p class="footer-col2-about-text">We accept</p>
-            
-            
-        </div>
+          </div>
 
-        <!-- Footer column 3 -->
-
-        <div class="footer-col-3">
+          <!-- Footer column 3 -->
+          <div class="footer-col-3">
             <p class="footer-col2-about-text">Our Services</p>
             <ul class="footer-col2-about" v-for="item in ourServices">
-                <li>{{ item }}</li>
+              <li>{{ item }}</li>
             </ul>
-        </div>
+          </div>
 
         <!-- Footer column 4 -->
 

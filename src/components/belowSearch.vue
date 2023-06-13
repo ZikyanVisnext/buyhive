@@ -1,9 +1,9 @@
 <template>
     <div class="below-search-parent">
         <div class="below-search-left">
+            <p v-show="productText">Products &nbsp; &nbsp;</p>
             <div v-for="(item, index) in lastFiveItems" :key="index">
-                <p>{{ item.category_name }}&nbsp; &nbsp;</p>
-               
+                <p>{{ item.category_name }} &nbsp; &nbsp;</p>
                 <!-- <p>{{ index }}&nbsp; &nbsp;</p> -->
             </div>
             <!-- <p>Products</p> -->
@@ -15,7 +15,7 @@
             <div class="zik-test">
                 Buy
             <div v-for="(item, index) in getFilters.category_breadcrumbs" :key=index >
-            <p>/{{ item.category_name }}</p>
+            <p>&nbsp;/ {{ item.category_name }}</p>
         </div>
             
             
@@ -34,7 +34,7 @@
 export default{
     data(){
         return{
-
+            productText:true
         }
     },
     computed:{
@@ -45,7 +45,13 @@ export default{
             return this.$store.getters.getFilters
         },
         lastFiveItems(){
-            return this.getFilters.category_breadcrumbs?.slice(-1).reverse()
+            if (this.getFilters.category_breadcrumbs?.length == 0) {
+                this.productText=true
+            } else {
+                this.productText=false
+                return this.getFilters.category_breadcrumbs?.slice(-1).reverse()
+            }
+            
         }
     },
     created(){
@@ -65,8 +71,9 @@ export default{
     align-items: center;
 }
 .below-search-left{
+    text-align: justify;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     flex-wrap: wrap;
     font-size: 20px;
