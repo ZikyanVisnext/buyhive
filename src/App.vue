@@ -11,39 +11,37 @@
     </div>
     <app-footer />
   </div>
-  
 </template>
 
 <script>
-import Header from './components/Header.vue';
-import Search from './components/Search.vue';
-import belowSearch from './components/belowSearch.vue';
-import leftFilter from './components/leftFilter.vue';
-import rightProducts from './components/rightProducts.vue';
-import Footer from './components/Footer.vue';
+import Header from "./components/Header.vue";
+import Search from "./components/Search.vue";
+import belowSearch from "./components/belowSearch.vue";
+import leftFilter from "./components/leftFilter.vue";
+import rightProducts from "./components/rightProducts.vue";
+import Footer from "./components/Footer.vue";
 
 export default {
   components: {
-    'app-header': Header,
-    'app-search': Search,
-    'app-below-search': belowSearch,
-    'app-left-filter': leftFilter,
-    'app-right-products': rightProducts,
-    'app-footer': Footer
-  }
-}
+    "app-header": Header,
+    "app-search": Search,
+    "app-below-search": belowSearch,
+    "app-left-filter": leftFilter,
+    "app-right-products": rightProducts,
+    "app-footer": Footer,
+  },
+};
 </script>
 
 <style scoped>
-#app{
-  /* margin: 30px 220px; */
+#app {
   margin: 30px 10%;
   padding: 0;
 }
-.left-right-components{
+.left-right-components {
   display: flex;
 }
-.parent-container{
+.parent-container {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   padding: 0;
   margin: 0;
