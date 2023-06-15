@@ -2,7 +2,7 @@
   <div class="below-search-parent">
     <div class="below-search-left">
       <p v-show="productText">Products &nbsp; &nbsp;</p>
-      <div v-for="(item, index) in lastFiveItems" :key="index">
+      <div v-for="(item, index) in showProductName" :key="index">
         <p>{{ item.category_name }} &nbsp; &nbsp;</p>
       </div>
       <div class="below-search-number-of-products">
@@ -25,6 +25,7 @@
         </div>
       </div>
     </div>
+
     <div class="below-search-right">
       Placing bulk orders on BuyHive is safe & easy.<br />
       <strong>Click to learn how it works!</strong>
@@ -33,6 +34,7 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from "vuex";
 export default {
   data() {
     return {
@@ -40,13 +42,8 @@ export default {
     };
   },
   computed: {
-    getProducts() {
-      return this.$store.getters.getProducts;
-    },
-    getFilters() {
-      return this.$store.getters.getFilters;
-    },
-    lastFiveItems() {
+    ...mapGetters(["getProducts", "getFilters"]),
+    showProductName() {
       if (this.getFilters.category_breadcrumbs?.length == 0) {
         this.productText = true;
       } else {
@@ -56,22 +53,29 @@ export default {
     },
   },
   created() {
-    this.$store.dispatch("fetchProducts");
-    this.$store.dispatch("fetchFilters");
+    this.fetchProducts();
+    this.fetchFilters();
   },
   methods: {
+    ...mapActions(["fetchProducts", "grandFilter", "fetchFilters", "category"]),
     handleMoreCategoryEvent(category) {
-      this.$store.dispatch("category", category);
-      this.$store.dispatch("grandFilter");
-      this.$store.dispatch("fetchFilters");
+      this.category(category);
+      this.grandFilter();
+      this.fetchFilters();
     },
   },
 };
 </script>
 
 <style>
+.below-search-filter-responsive-parent {
+  display: none;
+}
 .buy-category-cursor {
   cursor: pointer;
+}
+.left-filter-responsive {
+  display: none;
 }
 .below-search-parent {
   margin-top: 20px;
@@ -115,5 +119,20 @@ export default {
   background-size: cover;
   width: 450px;
   padding: 10px;
+}
+@media only screen and (max-width: 1100px) {
+  .below-search-parent {
+    display: block;
+  }
+  .below-search-middle {
+    display: none;
+  }
+  .below-search-right {
+    display: none;
+  }
+  .left-filter-responsive {
+    display: block;
+    background-color: crimson;
+  }
 }
 </style>

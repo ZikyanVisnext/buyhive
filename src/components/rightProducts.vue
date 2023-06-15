@@ -1,6 +1,7 @@
 <template>
   <div class="right-component-parent">
     <div class="right-parent-upper">
+
       <!-- Change product layout buttons -->
 
       <div class="right-parent-upper-left">
@@ -24,11 +25,13 @@
         ></i>
       </div>
       <div class="right-parent-upper-right">
+        
         <!-- Relevance filter + next page pf products arrow buttons -->
 
-        <div>
+        <div class="right-product-sort-filter-responsive">
+          <p class="sort-by-responsive-text">Sort By: &nbsp; &nbsp;</p>
           <select
-            @change="sortByFilter($event)"
+            @change="sortFilter($event)"
             class="right-upper-right-product-input-relevance"
           >
             <option value="relevance">Relevance</option>
@@ -39,22 +42,24 @@
             <option value="ratings_high_to_low">Ratings High to Low</option>
           </select>
         </div>
-        <i
-          class="fa fa-toggle-left right-product-left-button"
-          @click="pageFunction(-1)"
-        ></i>
+        <div class="page-left-right-parent">
+          <i
+            class="fa fa-toggle-left right-product-left-button"
+            @click="page(-1)"
+          ></i>
 
-        <input
-          class="right-upper-right-product-input"
-          type="text"
-          :value="$store.state.filterOptions.page"
-          readonly
-        />
-        <p>of &nbsp; {{ Math.ceil(getProducts.total_results / 24) }}</p>
-        <i
-          class="fa fa-toggle-right right-product-left-button"
-          v-on:click="pageFunction(1)"
-        ></i>
+          <input
+            class="right-upper-right-product-input"
+            type="text"
+            :value="$store.state.filterOptions.page"
+            readonly
+          />
+          <p>of &nbsp; {{ Math.ceil(getProducts.total_results / 24) }}</p>
+          <i
+            class="fa fa-toggle-right right-product-left-button"
+            v-on:click="page(1)"
+          ></i>
+        </div>
       </div>
     </div>
 
@@ -114,7 +119,7 @@
       <div class="product-lower-next-button">
         <i
           class="fa fa-toggle-left right-product-left-button"
-          v-on:click="pageFunction(-1)"
+          v-on:click="page(-1)"
         ></i>
         <input
           class="right-upper-right-product-input"
@@ -125,7 +130,7 @@
         <p>of &nbsp; {{ Math.ceil(getProducts.total_results / 24) }}</p>
         <i
           class="fa fa-toggle-right right-product-left-button"
-          v-on:click="pageFunction(1)"
+          v-on:click="page(1)"
         ></i>
       </div>
     </div>
@@ -133,6 +138,7 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from "vuex";
 export default {
   data() {
     return {
@@ -142,24 +148,25 @@ export default {
     };
   },
   computed: {
-    getProducts() {
-      return this.$store.getters.getProducts;
-    },
+    ...mapGetters(["getProducts"]),
   },
   created() {
-    this.$store.dispatch("fetchProducts");
+    this.fetchProducts();
   },
   methods: {
-    grandFilter() {
-      this.$store.dispatch("grandFilter");
-      return this.$store.getters.grandFilter;
-    },
-    sortByFilter(event) {
-      this.$store.dispatch("sortByFilter", event.target.value);
+    ...mapActions([
+      "fetchProducts",
+      "grandFilter",
+      "sortByFilter",
+      "pageFunction",
+    ]),
+
+    sortFilter(event) {
+      this.sortByFilter(event.target.value);
       this.grandFilter();
     },
-    pageFunction(item) {
-      this.$store.dispatch("pageFunction", item);
+    page(item) {
+      this.pageFunction(item);
       this.grandFilter();
     },
     toggleView(button) {
@@ -191,6 +198,15 @@ export default {
 .add-cart-button {
   display: none;
 }
+.page-left-right-parent {
+  display: flex;
+  width: 60%;
+  justify-content: space-between;
+  align-items: center;
+}
+.sort-by-responsive-text {
+  display: none;
+}
 .add-cart-button-show {
   display: block;
   border: 1px solid #47b3ca;
@@ -203,7 +219,7 @@ export default {
   cursor: pointer;
 }
 .single-image-display-center {
-  width: 100%;
+  /* width: 100%; */
   display: flex;
   justify-content: center;
 }
@@ -345,5 +361,35 @@ export default {
   display: flex;
   justify-content: right;
   align-items: center;
+}
+@media only screen and (max-width: 1100px) {
+  .right-parent-upper-left {
+    display: none;
+  }
+  .page-left-right-parent {
+    display: none;
+  }
+  .product-lower-next-button-container {
+    display: none;
+  }
+  .right-component-parent {
+    margin: 0;
+    padding: 0;
+  }
+  .sort-by-responsive-text {
+    display: block;
+  }
+  .right-product-sort-filter-responsive {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .right-upper-right-product-input-relevance {
+    border-radius: 50px;
+    background-color: #f2f2f2;
+    height: 40px;
+    border: 1px solid #c8c5c5;
+  }
 }
 </style>

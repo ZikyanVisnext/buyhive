@@ -33,7 +33,7 @@
       </div>
       <div class="footer-col-right-generic">
         <div class="footer-col-right-inner">
-          
+
           <!-- Footer column 2 -->
 
           <div class="footer-col-2">
@@ -276,5 +276,46 @@ export default {
 }
 .payment-card-images img {
   margin-right: 5px;
+}
+@media only screen and (max-width: 1300px) {
+  .footer-parent {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+  }
+  .footer-col-container {
+    margin: 0;
+    padding: 50px 20px;
+    display: flex;
+    flex-direction: column;
+  }
+  .payment-card-images {
+    display: none;
+  }
+  .footer-col-right-inner {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+  }
+  .footer-bottom-bar-container {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    margin: 0;
+  }
+  .footer-bottom-bar-right {
+    display: flex;
+    flex-direction: column;
+  }
+  .footer-col-2 {
+    margin: 0;
+  }
+  .footer-col-3 {
+    margin: 0;
+  }
+  .footer-email-input input {
+    width: 50vw;
+  }
 }
 </style>

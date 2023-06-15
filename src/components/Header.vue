@@ -19,6 +19,11 @@
       <i class="fa fa-shopping-basket header-cart-icon"> </i>
       <span class="cart-icon-circle">0</span>
     </div>
+    <div class="header-right-responsive">
+      <p>Sign in</p>
+      <i class="fa fa-shopping-basket header-cart-icon"> </i>
+      <i class="fa fa-reorder" style="font-size: 24px"></i>
+    </div>
   </div>
 </template>
 
@@ -56,6 +61,7 @@ export default {
 .header-parent {
   display: flex;
   justify-content: space-between;
+  width: auto;
 }
 .header-left {
   display: flex;
@@ -65,16 +71,15 @@ export default {
   display: flex;
   list-style-type: none;
   justify-content: space-between;
-  width: 700px;
 }
 .header-menus-ul li {
   font-size: 18px;
+  margin: 0 10px;
 }
 .header-right {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 270px;
 }
 .header-right-button {
   width: 100px;
@@ -95,47 +100,28 @@ export default {
   background-color: #fff;
   border: 1px solid #66ba86;
   cursor: pointer;
+  margin: 0 20px;
 }
 .header-right-first-two-buttons {
   width: 220px;
   display: flex;
   justify-content: space-around;
 }
-@media only screen and (max-width: 900px) {
-  .header-parent {
-    width: 100%;
-  }
-  .header-left {
-    flex-basis: 50%;
-  }
+.header-right-responsive {
+  display: none;
+}
+@media only screen and (max-width: 1100px) {
   .header-menus-ul {
     display: none;
   }
-  .header-right-first-two-buttons {
-    display: none;
+  .header-right-responsive {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 35vw;
   }
   .header-right {
-    flex-basis: 50%;
-    text-align: right;
-  }
-  .hamburger-menu {
-    display: block;
-    font-size: 24px;
-    padding: 10px;
-    cursor: pointer;
-  }
-  .header-menus-ul-mobile {
     display: none;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-  .header-menus-ul-mobile li {
-    text-align: center;
-    margin-bottom: 10px;
-  }
-  .header-menus-ul-mobile li:last-child {
-    margin-bottom: 0;
   }
 }
 </style>

@@ -46,4 +46,14 @@ export default {
   padding: 0;
   margin: 0;
 }
+@media only screen and (max-width: 1100px) {
+  .left-right-components {
+    display: flex;
+    flex-direction: column;
+  }
+  #app {
+    margin: 30px 5%;
+    padding: 0;
+  }
+}
 </style>

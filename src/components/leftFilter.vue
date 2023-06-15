@@ -1,193 +1,204 @@
 <template>
-  <div class="left-filter-parent">
-    <div class="left-filter-container">
-      <div
-        v-if="getFilters.categories?.length >= 1"
-        class="left-filter-cert-container"
-      >
-        <div class="left-filter-cert-container-inner">
-          <div class="cert-filter">
-            <input
-              type="text"
-              placeholder="More Categories"
-              v-model="moreCategoriesSearch"
-              @change="moreCategoriesSearchFunction"
-            />
-          </div>
-          <div class="left-filter-cert-checkbox">
-            <div
-              class="left-filter-big-checkbox"
-              v-for="(item, index) in moreCategoriesSearchFunction"
-              :key="index"
-            >
-              <p
-                @click="handleMoreCategoryEvent(item.category_slug)"
-                class="top-more-category-filter"
-              >
-                {{ item.category_name }}
-              </p>
+  <div class="left-filter-responsive-parent">
+    <div @click="showLeftFilter" class="below-search-filter-responsive-parent">
+      <div class="below-search-filter-responsive">
+        <p>{{ !this.showFilter ? "Show Filter" : "Close Filter" }}</p>
+      </div>
+    </div>
+    <div
+      :class="
+        showFilter ? 'left-filter-parent' : 'left-filter-parent-responsive'
+      "
+    >
+      <div class="left-filter-container">
+        <div
+          v-if="getFilters.categories?.length >= 1"
+          class="left-filter-cert-container"
+        >
+          <div class="left-filter-cert-container-inner">
+            <div class="cert-filter">
+              <input
+                type="text"
+                placeholder="More Categories"
+                v-model="moreCategoriesSearch"
+                @change="moreCategoriesSearchFunction"
+              />
+            </div>
+            <div class="left-filter-cert-checkbox">
               <div
-                v-if="item.sub_categories"
-                class="top-more-category-filter-sub-category"
+                class="left-filter-big-checkbox"
+                v-for="(item, index) in moreCategoriesSearchFunction"
+                :key="index"
               >
                 <p
-                  style="font-size: 15px"
-                  v-for="(item, index) in item.sub_categories"
                   @click="handleMoreCategoryEvent(item.category_slug)"
+                  class="top-more-category-filter"
                 >
                   {{ item.category_name }}
                 </p>
+                <div
+                  v-if="item.sub_categories"
+                  class="top-more-category-filter-sub-category"
+                >
+                  <p
+                    style="font-size: 15px"
+                    v-for="(item, index) in item.sub_categories"
+                    @click="handleMoreCategoryEvent(item.category_slug)"
+                  >
+                    {{ item.category_name }}
+                  </p>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Price Section -->
+        <!-- Price Section -->
 
-      <div class="left-filter-price-container">
-        <p>Price</p>
-        <div class="price-filter">
-          <input
-            type="number"
-            name="min"
-            placeholder="from"
-            :value="getFilters.min_price"
-            @input="handlePrice"
-          />
-          <p>&nbsp;-&nbsp;</p>
-          <input
-            type="number"
-            name="max"
-            placeholder="to"
-            :value="getFilters.max_price"
-            @input="handlePrice"
-          />
-        </div>
-      </div>
-
-      <!-- MOQ Section -->
-
-      <div class="left-filter-moq-container">
-        <p>MOQ</p>
-        <div class="moq-filter">
-          <input
-            type="number"
-            placeholder="Less than"
-            v-model="moqSearch"
-            @input="handleMoqSearch"
-          />
-        </div>
-      </div>
-
-      <!-- Product Certification Section -->
-
-      <div
-        v-if="getFilters.product_certification?.length"
-        class="left-filter-cert-container"
-      >
-        <p>Product Certification</p>
-        <div class="left-filter-cert-container-inner">
-          <div class="cert-filter">
+        <div class="left-filter-price-container">
+          <p>Price</p>
+          <div class="price-filter">
             <input
-              type="text"
-              placeholder="Product Certifications..."
-              v-model="productSearch"
-              @change="productSearchFunction"
+              type="number"
+              name="min"
+              placeholder="from"
+              :value="getFilters.min_price"
+              @input="handlePrice"
+            />
+            <p>&nbsp;-&nbsp;</p>
+            <input
+              type="number"
+              name="max"
+              placeholder="to"
+              :value="getFilters.max_price"
+              @input="handlePrice"
             />
           </div>
-          <div class="left-filter-cert-checkbox">
-            <div
-              class="left-filter-big-checkbox"
-              v-for="(item, index) in productSearchFunction"
-              :key="index"
-            >
+        </div>
+
+        <!-- MOQ Section -->
+
+        <div class="left-filter-moq-container">
+          <p>MOQ</p>
+          <div class="moq-filter">
+            <input
+              type="number"
+              placeholder="Less than"
+              v-model="moqAmount"
+              @input="handleMoqSearch"
+            />
+          </div>
+        </div>
+
+        <!-- Product Certification Section -->
+
+        <div
+          v-if="getFilters.product_certification?.length"
+          class="left-filter-cert-container"
+        >
+          <p>Product Certification</p>
+          <div class="left-filter-cert-container-inner">
+            <div class="cert-filter">
               <input
-                type="checkbox"
-                :value="item"
-                v-model="productCertificates"
-                @change="proCertFilter"
+                type="text"
+                placeholder="Product Certifications..."
+                v-model="productSearch"
+                @change="productSearchFunction"
               />
-              <span>&nbsp; &nbsp; {{ item }}</span>
+            </div>
+            <div class="left-filter-cert-checkbox">
+              <div
+                class="left-filter-big-checkbox"
+                v-for="(item, index) in productSearchFunction"
+                :key="index"
+              >
+                <input
+                  type="checkbox"
+                  :value="item"
+                  v-model="productCertificates"
+                  @change="proCertFilter"
+                />
+                <span>&nbsp; &nbsp; {{ item }}</span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Supplier Certification -->
+        <!-- Supplier Certification -->
 
-      <div
-        v-if="getFilters.supplier_certification?.length"
-        class="left-filter-cert-container"
-      >
-        <p>Supplier Certification</p>
-        <div class="left-filter-cert-container-inner">
-          <div class="cert-filter">
-            <input
-              type="text"
-              placeholder="Supplier Certifications..."
-              v-model="supplySearch"
-              @change="supplySearchFunction"
-            />
-          </div>
-          <div class="left-filter-supply-checkbox">
-            <div
-              class="left-filter-big-checkbox"
-              v-for="(item, index) in supplySearchFunction"
-              :key="index"
-            >
+        <div
+          v-if="getFilters.supplier_certification?.length"
+          class="left-filter-cert-container"
+        >
+          <p>Supplier Certification</p>
+          <div class="left-filter-cert-container-inner">
+            <div class="cert-filter">
               <input
-                type="checkbox"
-                :value="'&has_' + item + '=true'"
-                v-model="productSupply"
-                @change="proSupplyFilter"
+                type="text"
+                placeholder="Supplier Certifications..."
+                v-model="supplySearch"
+                @change="supplySearchFunction"
               />
-              <span>&nbsp; &nbsp; {{ item }}</span>
+            </div>
+            <div class="left-filter-supply-checkbox">
+              <div
+                class="left-filter-big-checkbox"
+                v-for="(item, index) in supplySearchFunction"
+                :key="index"
+              >
+                <input
+                  type="checkbox"
+                  :value="'&has_' + item + '=true'"
+                  v-model="productSupply"
+                  @change="proSupplyFilter"
+                />
+                <span>&nbsp; &nbsp; {{ item }}</span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Manufacturer Location -->
+        <!-- Manufacturer Location -->
 
-      <div
-        v-if="getFilters.supplier_locations?.length"
-        class="left-filter-cert-container"
-      >
-        <p>Manufacturer Location</p>
-        <div class="left-filter-cert-container-inner">
-          <div class="cert-filter">
-            <input
-              type="text"
-              placeholder="Country/Region"
-              v-model="countrySearch"
-              @change="countrySearchFunction"
-            />
-          </div>
-          <div class="left-filter-cert-checkbox">
-            <div
-              class="left-filter-big-checkbox"
-              v-for="(item, index) in countrySearchFunction"
-              :key="index"
-            >
+        <div
+          v-if="getFilters.supplier_locations?.length"
+          class="left-filter-cert-container"
+        >
+          <p>Manufacturer Location</p>
+          <div class="left-filter-cert-container-inner">
+            <div class="cert-filter">
               <input
-                type="checkbox"
-                :value="item"
-                v-model="productCountry"
-                @change="proCountryFilter"
+                type="text"
+                placeholder="Country/Region"
+                v-model="countrySearch"
+                @change="countrySearchFunction"
               />
-              <span>&nbsp; &nbsp; {{ item }}</span>
+            </div>
+            <div class="left-filter-cert-checkbox">
+              <div
+                class="left-filter-big-checkbox"
+                v-for="(item, index) in countrySearchFunction"
+                :key="index"
+              >
+                <input
+                  type="checkbox"
+                  :value="item"
+                  v-model="productCountry"
+                  @change="proCountryFilter"
+                />
+                <span>&nbsp; &nbsp; {{ item }}</span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div v-if="getFilters.stock_in_usa_filter" class="left-filter-stock">
-        <p>Stock Availability</p>
-        <div class="left-filter-stock-flex">
-          <input type="checkbox" @click="usaStockFunction" />
-          <img src="../assets/usa.png" width="25px" />
-          <span style="font-size: 14px">&nbsp;in USA</span>
+        <div v-if="getFilters.stock_in_usa_filter" class="left-filter-stock">
+          <p>Stock Availability</p>
+          <div class="left-filter-stock-flex">
+            <input type="checkbox" @click="usaStockFunction" />
+            <img src="../assets/usa.png" width="25px" />
+            <span style="font-size: 14px">&nbsp;in USA</span>
+          </div>
         </div>
       </div>
     </div>
@@ -195,14 +206,14 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from "vuex";
 export default {
   data() {
     return {
       productCertificates: [],
       productCountry: [],
       productSupply: [],
-      usaStock: "",
-      moqSearch: null,
+      moqAmount: null,
       price: {
         minPrice: null,
         maxPrice: null,
@@ -211,12 +222,11 @@ export default {
       supplySearch: "",
       countrySearch: "",
       moreCategoriesSearch: "",
+      showFilter: false,
     };
   },
   computed: {
-    getFilters() {
-      return this.$store.getters.getFilters;
-    },
+    ...mapGetters(["getFilters"]),
     productSearchFunction() {
       return this.getFilters.product_certification.filter((item) => {
         return item.toLowerCase().includes(this.productSearch.toLowerCase());
@@ -244,26 +254,37 @@ export default {
     this.items = this.$store.dispatch("fetchFilters");
   },
   methods: {
+    ...mapActions([
+      "grandFilter",
+      "fetchFilters",
+      "joinCertificate",
+      "joinCountry",
+      "joinSupply",
+      "usaStock",
+      "moqSearch",
+      "priceSearch",
+      "category",
+    ]),
     proCertFilter() {
-      this.$store.dispatch("joinCertificate", this.productCertificates);
-      this.$store.dispatch("grandFilter");
+      this.joinCertificate(this.productCertificates);
+      this.grandFilter();
     },
     proCountryFilter() {
-      this.$store.dispatch("joinCountry", this.productCountry);
-      this.$store.dispatch("grandFilter");
+      this.joinCountry(this.productCountry);
+      this.grandFilter();
     },
     proSupplyFilter() {
-      this.$store.dispatch("joinSupply", this.productSupply);
-      this.$store.dispatch("grandFilter");
+      this.joinSupply(this.productSupply);
+      this.grandFilter();
     },
     usaStockFunction() {
-      this.$store.dispatch("usaStock");
-      this.$store.dispatch("grandFilter");
+      this.usaStock();
+      this.grandFilter();
     },
     handleMoqSearch() {
       setTimeout(() => {
-        this.$store.dispatch("moqSearch", this.moqSearch);
-        this.$store.dispatch("grandFilter");
+        this.moqSearch(this.moqAmount);
+        this.grandFilter();
       }, 800);
     },
     handlePrice(event) {
@@ -276,14 +297,18 @@ export default {
           ? event.target.value
           : this.$store.state.filterOptions.maxPrice;
       setTimeout(() => {
-        this.$store.dispatch("priceSearch", this.price);
-        this.$store.dispatch("grandFilter");
+        this.priceSearch(this.price);
+        this.grandFilter();
       }, 800);
     },
-    handleMoreCategoryEvent(category) {
-      this.$store.dispatch("category", category);
-      this.$store.dispatch("grandFilter");
-      this.$store.dispatch("fetchFilters");
+    handleMoreCategoryEvent(item) {
+      this.category(item);
+      this.grandFilter();
+      this.fetchFilters();
+      this.showLeftFilter();
+    },
+    showLeftFilter() {
+      this.showFilter = !this.showFilter;
     },
   },
 };
@@ -329,6 +354,7 @@ export default {
   align-items: center;
 }
 .price-filter input {
+  text-align: center;
   border-radius: 50px;
   border: 1px solid #c8c5c5;
   background-color: #f2f2f2;
@@ -341,6 +367,7 @@ export default {
   align-items: center;
 }
 .moq-filter input {
+  text-align: center;
   border-radius: 50px;
   border: 1px solid #c8c5c5;
   background-color: #f2f2f2;
@@ -353,6 +380,7 @@ export default {
   align-items: center;
 }
 .cert-filter input {
+  text-align: center;
   border-radius: 50px;
   border: 1px solid #c8c5c5;
   background-color: #f2f2f2;
@@ -418,9 +446,29 @@ export default {
   width: 94%;
   height: 170px;
 }
-@media only screen and (max-width: 900px) {
-  .left-filter-parent{
+@media only screen and (max-width: 1100px) {
+  .left-filter-parent-responsive {
     display: none;
+  }
+  .below-search-filter-responsive-parent {
+    cursor: pointer;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  .below-search-filter-responsive {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50px;
+    margin-top: 20px;
+    width: 80vw;
+    border: 1px solid #d1d1d1;
+  }
+  .left-filter-responsive-parent {
+    display: flex;
+    flex-direction: column;
   }
 }
 </style>

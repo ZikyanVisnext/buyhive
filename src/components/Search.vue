@@ -31,6 +31,20 @@
             Search
           </button>
         </div>
+        <div class="search-right-responsive">
+          <button class="search-right-button" @click="submitSearch">
+            <i class="fa fa-search" style="font-size: 24px"></i>
+          </button>
+        </div>
+      </div>
+      <div class="search-middle-more-categories-responsive-parent">
+        <div
+          @click="isCategory = !isCategory"
+          class="search-middle-more-categories-responsive"
+        >
+          <i class="fa fa-window-restore search-category-icon"></i>
+          <p>Categories</p>
+        </div>
       </div>
     </div>
 
@@ -43,7 +57,7 @@
         <ul>
           <li
             class="search-category-dropdown-parent-category"
-            @click="category(parent.category_slug)"
+            @click="selectCategory(parent.category_slug)"
           >
             {{ parent.category_name }}
           </li>
@@ -51,7 +65,7 @@
         <ul v-for="(item, index) in parent.sub_categories" :key="index">
           <li
             class="search-category-dropdown-sub-category"
-            @click="category(item.category_slug)"
+            @click="selectCategory(item.category_slug)"
           >
             {{ item.category_name }}
           </li>
@@ -62,11 +76,11 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from "vuex";
 export default {
   data() {
     return {
       isCategory: false,
-      searchKey: "",
       searchObject: {
         enteredText: "",
         selectedCategory: "",
@@ -74,28 +88,34 @@ export default {
     };
   },
   computed: {
-    getCategories() {
-      return this.$store.getters.getCategories;
-    },
+    ...mapGetters(["getCategories"]),
   },
   created() {
     this.$store.dispatch("fetchCategories");
   },
   methods: {
-    category(payload) {
+    ...mapActions([
+      "fetchCategories",
+      "category",
+      "grandFilter",
+      "fetchFilters",
+      "searchKey",
+    ]),
+    selectCategory(payload) {
       this.isCategory = false;
-      this.searchKey = "";
-      this.$store.dispatch("category", payload);
-      this.$store.dispatch("grandFilter");
-      this.$store.dispatch("fetchFilters");
+      this.category(payload);
+      this.grandFilter();
+      this.fetchFilters();
+      this.searchObject.enteredText = "";
+      this.searchObject.selectedCategory = "";
     },
     selectedCategoryFunction(event) {
       this.searchObject.selectedCategory = event.target.value;
     },
     submitSearch() {
-      this.$store.dispatch("searchKey", this.searchObject);
-      this.$store.dispatch("grandFilter");
-      this.$store.dispatch("fetchFilters");
+      this.searchKey(this.searchObject);
+      this.grandFilter();
+      this.fetchFilters();
     },
   },
 };
@@ -110,6 +130,9 @@ export default {
 .category-drop-down ul {
   padding: 0;
   margin: 0;
+}
+.search-right-responsive {
+  display: none;
 }
 .search-category-dropdown-parent {
   padding: 20px;
@@ -148,10 +171,14 @@ export default {
   margin-top: 30px;
   width: 100%;
 }
+.search-middle-more-categories-responsive {
+  display: none;
+}
 .search-container {
   display: flex;
   justify-content: space-between;
   background-color: #f2f2f2;
+  width: auto;
   border-radius: 10px;
   padding: 10px 20px;
   align-items: center;
@@ -165,9 +192,11 @@ export default {
   border: 1px solid #c8c5c5;
 }
 .search-right-button {
+  margin-left: 8px;
   border: 1px solid #47b3ca;
   background-color: #47b3ca;
-  width: 120px;
+  width: auto;
+  padding: 0 20px;
   height: 40px;
   border-radius: 50px;
   color: #fff;
@@ -179,5 +208,71 @@ export default {
   font-size: 18px;
   background: rgba(0, 0, 0, 0);
   border: none;
+}
+@media only screen and (max-width: 1100px) {
+  .search-left {
+    display: none;
+  }
+  .search-right {
+    display: none;
+  }
+  .search-select-all-categories {
+    display: none;
+  }
+  .search-right-responsive {
+    display: block;
+  }
+  .search-middle-input {
+    width: 60vw;
+  }
+  .search-middle-more-categories-responsive-parent {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+  }
+  .search-middle-more-categories-responsive {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f2f2f2;
+    border-radius: 50px;
+    margin-top: 20px;
+    width: 80vw;
+  }
+  .search-right-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .search-right-button {
+    border: 1px solid #47b3ca;
+    background-color: #47b3ca;
+    width: auto;
+    height: auto;
+    border-radius: 50px;
+    padding: 5px;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  .category-drop-down {
+    background-color: #f2f2f2;
+    display: flex;
+    justify-content: space-between;
+    overflow-x: scroll;
+    margin-top: 10px;
+    border-radius: 10px;
+  }
+  .category-drop-down::-webkit-scrollbar {
+    background-color: #dedede;
+    width: 5px;
+    height: 10px;
+    border-radius: 10px;
+  }
+  .category-drop-down::-webkit-scrollbar-thumb {
+    background-color: #5cb674;
+    border-radius: 10px;
+  }
 }
 </style>
