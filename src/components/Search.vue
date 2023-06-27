@@ -4,7 +4,7 @@
       <div class="search-container">
         <div class="search-left" @click="isCategory = !isCategory">
           <i class="fa fa-window-restore search-category-icon"></i>
-          <p style="font-size: 18px">Categories</p>
+          <p @click="zikTest" style="font-size: 18px">Categories</p>
         </div>
         <div class="search-middle">
           <input
@@ -19,7 +19,7 @@
           >
             <option value="default">All Categories</option>
             <option
-              v-for="(parent, index) in getCategories.categories"
+              v-for="(parent, index) in getCategories"
               :key="index"
             >
               {{ parent.category_name }}
@@ -50,7 +50,7 @@
 
     <div v-if="isCategory" class="category-drop-down">
       <div
-        v-for="(parent, index) in getCategories.categories"
+        v-for="(parent, index) in getCategories"
         :key="index"
         class="search-category-dropdown-parent"
       >
@@ -117,6 +117,9 @@ export default {
       this.grandFilter();
       this.fetchFilters();
     },
+    zikTest(){
+      console.log(this.$store.getters.getCategories)
+    }
   },
 };
 </script>

@@ -22,7 +22,7 @@
     <div class="header-right-responsive">
       <p>Sign in</p>
       <i class="fa fa-shopping-basket header-cart-icon"> </i>
-      <i class="fa fa-reorder" style="font-size: 24px"></i>
+      <i @click="toggleMobileMenu" class="fa fa-reorder hamburger-menu" style="font-size: 24px"></i>
     </div>
   </div>
 </template>
@@ -38,8 +38,14 @@ export default {
         "Financing",
         "About Us",
       ],
+      isMobileMenuOpen: false
     };
   },
+  methods:{
+    toggleMobileMenu() {
+      this.isMobileMenuOpen = !this.isMobileMenuOpen;
+    }
+  }
 };
 </script>
 

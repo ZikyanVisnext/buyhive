@@ -33,7 +33,7 @@ export const store = new Vuex.Store({
     fetchProducts: async (context) => {
       try {
         const data = await axios.get(
-          "https://portal.thebuyhive.com/api/ecom/v2/search?keyword=&category=&page=1&sort_by=default"
+          "http://localhost:3000/products"
         );
         context.commit("SET_PRODUCTS", data.data);
       } catch (error) {
@@ -43,8 +43,10 @@ export const store = new Vuex.Store({
     fetchCategories: async (context) => {
       try {
         const data = await axios.get(
-          "https://portal.thebuyhive.com/api/ecom/v2/categories"
+          // "https://portal.thebuyhive.com/api/ecom/v2/categories"
+          "http://localhost:3000/categories"
         );
+        console.log(data.data)
         context.commit("SET_CATEGORIES", data.data);
       } catch (error) {
         console.log(error);
@@ -53,7 +55,7 @@ export const store = new Vuex.Store({
     grandFilter: async (context) => {
       try {
         const data = await axios.get(
-          "https://portal.thebuyhive.com/api/ecom/v2/search?keyword=" +
+          "http://localhost:3000/products/search?keyword=" +
             context.state.filterOptions.key +
             "&category=" +
             encodeURIComponent(
@@ -63,10 +65,10 @@ export const store = new Vuex.Store({
             ) +
             "&page=" +
             context.state.filterOptions.page +
-            "&min_price=" +
-            context.state.filterOptions.minPrice +
-            "&max_price=" +
-            context.state.filterOptions.maxPrice +
+            // "&min_price=" +
+            // context.state.filterOptions.minPrice +
+            // "&max_price=" +
+            // context.state.filterOptions.maxPrice +
             "&country=" +
             context.state.filterOptions.country +
             "&certificates=" +
@@ -76,7 +78,7 @@ export const store = new Vuex.Store({
             (context.state.filterOptions.moqSearch
               ? "&moq=" + context.state.filterOptions.moqSearch
               : "") +
-            (context.state.filterOptions.usaStock ? "&stock_in_usa=true" : "")
+            (context.state.filterOptions.usaStock ? "&usa_stock=true" : "")
         );
 
         context.commit("GRAND_FILTER", data.data);
@@ -113,15 +115,6 @@ export const store = new Vuex.Store({
     category: (context, payload) => {
       context.commit("CATEGORY", payload);
     },
-    joinCertificate: (context, payload) => {
-      context.commit("JOIN_CERTIFICATE", payload);
-    },
-    joinCountry: (context, payload) => {
-      context.commit("JOIN_COUNTRY", payload);
-    },
-    joinSupply: (context, payload) => {
-      context.commit("JOIN_SUPPLY", payload);
-    },
     usaStock: (context, payload) => {
       context.commit("USA_STOCK", payload);
     },
@@ -134,6 +127,10 @@ export const store = new Vuex.Store({
     priceSearch: (context, payload) => {
       context.commit("PRICE_SEARCH", payload);
     },
+    setFilterOption(context, { option, value }) {
+      context.commit('SET_FILTER_OPTION', { option, value });
+    },
+
   },
   mutations: {
     SET_PRODUCTS(state, products) {
@@ -147,6 +144,9 @@ export const store = new Vuex.Store({
     },
     SET_FILTERS(state, filters) {
       state.filters = filters;
+    },
+    SET_FILTER_OPTION(state, { option, value }) {
+      state.filterOptions[option] = value;
     },
     PAGE_FUNCTION(state, payload) {
       const newPage = state.filterOptions.page + payload;
@@ -167,15 +167,6 @@ export const store = new Vuex.Store({
       state.filterOptions.page = 1;
       state.filterOptions.minPrice = "";
       state.filterOptions.maxPrice = "";
-    },
-    JOIN_CERTIFICATE(state, payload) {
-      state.filterOptions.certificate = payload;
-    },
-    JOIN_COUNTRY(state, payload) {
-      state.filterOptions.country = payload;
-    },
-    JOIN_SUPPLY(state, payload) {
-      state.filterOptions.supply = payload;
     },
     USA_STOCK(state) {
       state.filterOptions.usaStock = !state.filterOptions.usaStock;

@@ -35,11 +35,11 @@
             class="right-upper-right-product-input-relevance"
           >
             <option value="relevance">Relevance</option>
-            <option value="latest">Latest</option>
-            <option value="price_low_to_high">Price Low to High</option>
-            <option value="price_high_to_low">Price High to Low</option>
-            <option value="MOQ_low_to_high">MOQ Low to High</option>
-            <option value="ratings_high_to_low">Ratings High to Low</option>
+            <!-- <option value="latest">Latest</option> -->
+            <option value="low_to_high">Price Low to High</option>
+            <option value="high_to_low">Price High to Low</option>
+            <option value="moq">MOQ Low to High</option>
+            <option value="rating">Ratings High to Low</option>
           </select>
         </div>
         <div class="page-left-right-parent">
@@ -68,7 +68,7 @@
     <div class="right-parent-lower">
       <div
         :class="view ? 'right-product-display' : 'right-product-display-view-2'"
-        v-for="(item, index) in getProducts.products"
+        v-for="(item, index) in getProducts"
         :key="index"
         @mouseover="showButton(index)"
         @mouseleave="showButton(null)"
@@ -81,7 +81,7 @@
           "
         >
           <div class="single-image-display-center">
-            <img class="product-image" v-bind:src="item.images[0].url" alt="" />
+            <img class="product-image" src="../assets/product1.png" alt="" />
           </div>
 
           <div v-if="item.stock_in_usa" class="product-stock-in-usa">
@@ -98,8 +98,8 @@
                 ? item.product_name.slice(0, 40) + "..."
                 : item.product_name
             }}</P>
-            <p class="product-moq-price-text">MOQ: {{ item.display_moq }}</p>
-            <p class="product-price-text">{{ item.price }}</p>
+            <p class="product-moq-price-text">MOQ: {{ item.moq }}</p>
+            <p class="product-price-text">$ {{ item.price }}</p>
           </div>
           <div class="add-cart-button-parent">
             <button
@@ -175,6 +175,9 @@ export default {
       }
       this.view = !this.view;
       this.previousButton = button;
+      this.$store.getters.getProducts.map((e)=>{
+        console.log(e)
+      })
     },
     showButton(productId) {
       this.showButtonId = productId;

@@ -116,7 +116,7 @@
                   type="checkbox"
                   :value="item"
                   v-model="productCertificates"
-                  @change="proCertFilter"
+                  @change="setFilter('certificate', productCertificates)"
                 />
                 <span>&nbsp; &nbsp; {{ item }}</span>
               </div>
@@ -150,7 +150,7 @@
                   type="checkbox"
                   :value="'&has_' + item + '=true'"
                   v-model="productSupply"
-                  @change="proSupplyFilter"
+                  @change="setFilter('supply', productSupply)"
                 />
                 <span>&nbsp; &nbsp; {{ item }}</span>
               </div>
@@ -184,7 +184,7 @@
                   type="checkbox"
                   :value="item"
                   v-model="productCountry"
-                  @change="proCountryFilter"
+                  @change="setFilter('country', productCountry)"
                 />
                 <span>&nbsp; &nbsp; {{ item }}</span>
               </div>
@@ -257,24 +257,14 @@ export default {
     ...mapActions([
       "grandFilter",
       "fetchFilters",
-      "joinCertificate",
-      "joinCountry",
-      "joinSupply",
       "usaStock",
       "moqSearch",
       "priceSearch",
       "category",
+      "setFilterOption",
     ]),
-    proCertFilter() {
-      this.joinCertificate(this.productCertificates);
-      this.grandFilter();
-    },
-    proCountryFilter() {
-      this.joinCountry(this.productCountry);
-      this.grandFilter();
-    },
-    proSupplyFilter() {
-      this.joinSupply(this.productSupply);
+    setFilter(option, value) {
+      this.setFilterOption({ option, value });
       this.grandFilter();
     },
     usaStockFunction() {
