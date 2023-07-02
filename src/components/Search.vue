@@ -4,7 +4,7 @@
       <div class="search-container">
         <div class="search-left" @click="isCategory = !isCategory">
           <i class="fa fa-window-restore search-category-icon"></i>
-          <p @click="zikTest" style="font-size: 18px">Categories</p>
+          <p style="font-size: 18px">Categories</p>
         </div>
         <div class="search-middle">
           <input
@@ -21,6 +21,7 @@
             <option
               v-for="(parent, index) in getCategories"
               :key="index"
+              v-if="parent.parent_category === null"
             >
               {{ parent.category_name }}
             </option>
@@ -58,16 +59,19 @@
           <li
             class="search-category-dropdown-parent-category"
             @click="selectCategory(parent.category_slug)"
+            v-if="parent.parent_category === null"
           >
             {{ parent.category_name }}
           </li>
         </ul>
-        <ul v-for="(item, index) in parent.sub_categories" :key="index">
+
+        <ul>
           <li
             class="search-category-dropdown-sub-category"
-            @click="selectCategory(item.category_slug)"
+            @click="selectCategory(parent.category_slug)"
+            v-if="parent.parent_category !== null"
           >
-            {{ item.category_name }}
+            {{ parent.category_name }}
           </li>
         </ul>
       </div>
@@ -102,6 +106,7 @@ export default {
       "searchKey",
     ]),
     selectCategory(payload) {
+      this.$store.dispatch("fetchPrice", payload);
       this.isCategory = false;
       this.category(payload);
       this.grandFilter();
@@ -116,16 +121,16 @@ export default {
       this.searchKey(this.searchObject);
       this.grandFilter();
       this.fetchFilters();
+      this.$store.dispatch("fetchPrice", this.searchObject.enteredText);
     },
-    zikTest(){
-      console.log(this.$store.getters.getCategories)
-    }
   },
 };
 </script>
 
 <style>
 .category-drop-down {
+  margin-top: 10px;
+  border-radius: 10px;
   background-color: #f2f2f2;
   display: flex;
   justify-content: space-between;

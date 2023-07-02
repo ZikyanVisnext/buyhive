@@ -9,6 +9,10 @@ export const store = new Vuex.Store({
     products: [],
     filters: [],
     categories: "",
+    minMaxPrice:{
+      minPrice: '',
+      maxPrice: '',
+    },
     filterOptions: {
       page: 1,
       sortBy: "",
@@ -18,9 +22,9 @@ export const store = new Vuex.Store({
       supply: [],
       usaStock: false,
       key: "",
-      moqSearch: null,
-      minPrice: null,
-      maxPrice: null,
+      moqSearch: '',
+      minPrice: '',
+      maxPrice: '',
     },
   },
   getters: {
@@ -28,6 +32,7 @@ export const store = new Vuex.Store({
     grandFilter: (state) => state.products,
     getFilters: (state) => state.filters,
     getCategories: (state) => state.categories,
+    getPrice: (state) => state.minMaxPrice,
   },
   actions: {
     fetchProducts: async (context) => {
@@ -46,7 +51,6 @@ export const store = new Vuex.Store({
           // "https://portal.thebuyhive.com/api/ecom/v2/categories"
           "http://localhost:3000/categories"
         );
-        console.log(data.data)
         context.commit("SET_CATEGORIES", data.data);
       } catch (error) {
         console.log(error);
@@ -63,16 +67,16 @@ export const store = new Vuex.Store({
                 ? context.state.filterOptions.category
                 : ""
             ) +
-            "&page=" +
-            context.state.filterOptions.page +
-            // "&min_price=" +
-            // context.state.filterOptions.minPrice +
-            // "&max_price=" +
-            // context.state.filterOptions.maxPrice +
+            "&min_price=" +
+            context.state.filterOptions.minPrice +
+            "&max_price=" +
+            context.state.filterOptions.maxPrice +
             "&country=" +
             context.state.filterOptions.country +
             "&certificates=" +
             context.state.filterOptions.certificate +
+            "&supplier=" +
+            context.state.filterOptions.supply +
             "&sort_by=" +
             context.state.filterOptions.sortBy +
             (context.state.filterOptions.moqSearch
@@ -89,7 +93,7 @@ export const store = new Vuex.Store({
     fetchFilters: async (context) => {
       try {
         const data = await axios.get(
-          "https://portal.thebuyhive.com/api/ecom/v2/search-filter?keyword=" +
+          "http://localhost:3000/filters/search-filter?keyword=" +
             context.state.filterOptions.key +
             "&category=" +
             encodeURIComponent(
@@ -97,11 +101,28 @@ export const store = new Vuex.Store({
                 ? context.state.filterOptions.category
                 : ""
             ) +
-            "&page=1&sort_by=default"
+            "&sort_by=default"
         );
-        context.state.filterOptions.minPrice = data.data.filters.min_price;
-        context.state.filterOptions.maxPrice = data.data.filters.max_price;
-        context.commit("SET_FILTERS", data.data.filters);
+        // context.state.filterOptions.minPrice = data.data[0].min_price;
+        // context.state.filterOptions.maxPrice = data.data[0].max_price;
+        context.commit("SET_FILTERS", data.data[0]);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    fetchPrice: async (context, payload) => {
+      try {
+        const data = await axios.get(
+          "http://localhost:3000/filters/price?" +
+            "&category=" +
+            encodeURIComponent(
+              payload
+                ? payload
+                : ""
+            ) +
+            "&sort_by=default"
+        );
+        context.commit("SET_PRICE", data.data[0]);
       } catch (error) {
         console.log(error);
       }
@@ -144,6 +165,9 @@ export const store = new Vuex.Store({
     },
     SET_FILTERS(state, filters) {
       state.filters = filters;
+    },
+    SET_PRICE(state, filters) {
+      state.minMaxPrice = filters;
     },
     SET_FILTER_OPTION(state, { option, value }) {
       state.filterOptions[option] = value;

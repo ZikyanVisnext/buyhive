@@ -61,16 +61,14 @@
             <input
               type="number"
               name="min"
-              placeholder="from"
-              :value="getFilters.min_price"
+              :placeholder="Math?.ceil(this.$store.state.minMaxPrice.min_price)"
               @input="handlePrice"
             />
             <p>&nbsp;-&nbsp;</p>
             <input
               type="number"
               name="max"
-              placeholder="to"
-              :value="getFilters.max_price"
+              :placeholder="Math.ceil(this.$store.state.minMaxPrice.max_price)"
               @input="handlePrice"
             />
           </div>
@@ -148,7 +146,7 @@
               >
                 <input
                   type="checkbox"
-                  :value="'&has_' + item + '=true'"
+                  :value="item"
                   v-model="productSupply"
                   @change="setFilter('supply', productSupply)"
                 />
@@ -192,7 +190,7 @@
           </div>
         </div>
 
-        <div v-if="getFilters.stock_in_usa_filter" class="left-filter-stock">
+        <div v-if="getFilters.stock_in_usa" class="left-filter-stock">
           <p>Stock Availability</p>
           <div class="left-filter-stock-flex">
             <input type="checkbox" @click="usaStockFunction" />
@@ -252,6 +250,7 @@ export default {
   },
   created() {
     this.items = this.$store.dispatch("fetchFilters");
+    this.items = this.$store.dispatch("fetchPrice");
   },
   methods: {
     ...mapActions([
@@ -262,6 +261,7 @@ export default {
       "priceSearch",
       "category",
       "setFilterOption",
+      "fetchPrice"
     ]),
     setFilter(option, value) {
       this.setFilterOption({ option, value });

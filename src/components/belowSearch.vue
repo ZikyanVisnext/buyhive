@@ -6,7 +6,7 @@
         <p>{{ item.category_name }} &nbsp; &nbsp;</p>
       </div>
       <div class="below-search-number-of-products">
-        ({{ getProducts.total_results }} Products)
+        ({{ getProducts[0]?.total_count }} Products)
       </div>
     </div>
     <div class="below-search-middle">

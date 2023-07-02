@@ -1,7 +1,6 @@
 <template>
   <div class="right-component-parent">
     <div class="right-parent-upper">
-
       <!-- Change product layout buttons -->
 
       <div class="right-parent-upper-left">
@@ -25,7 +24,6 @@
         ></i>
       </div>
       <div class="right-parent-upper-right">
-        
         <!-- Relevance filter + next page pf products arrow buttons -->
 
         <div class="right-product-sort-filter-responsive">
@@ -54,7 +52,7 @@
             :value="$store.state.filterOptions.page"
             readonly
           />
-          <p>of &nbsp; {{ Math.ceil(getProducts.total_results / 24) }}</p>
+          <p>of &nbsp; {{ Math.ceil(getProducts[0]?.total_count / 24) }}</p>
           <i
             class="fa fa-toggle-right right-product-left-button"
             v-on:click="page(1)"
@@ -127,7 +125,7 @@
           :value="this.$store.state.filterOptions.page"
           readonly
         />
-        <p>of &nbsp; {{ Math.ceil(getProducts.total_results / 24) }}</p>
+        <p>of &nbsp; {{ Math.ceil(getProducts[0]?.total_count / 24) }}</p>
         <i
           class="fa fa-toggle-right right-product-left-button"
           v-on:click="page(1)"
@@ -175,9 +173,9 @@ export default {
       }
       this.view = !this.view;
       this.previousButton = button;
-      this.$store.getters.getProducts.map((e)=>{
-        console.log(e)
-      })
+      this.$store.getters.getProducts.map((e) => {
+        console.log(e);
+      });
     },
     showButton(productId) {
       this.showButtonId = productId;
